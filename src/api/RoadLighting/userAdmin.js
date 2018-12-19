@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+
 /**
  * 机构管理
  */
@@ -15,23 +16,29 @@ export function addOrUpdateInstitution (obj) {
     data: obj
   })
 }
+
 /**
- * 按搜索条件分页获取机构集合
+ * 按搜索条件搜索获取机构集合
  * @export
  * @param {any} pageNumber
  * @param {any} pageSize
+ * @param {any} institutionName
+ * @param {any} addr
  * @returns data
  */
-export function listInstitution (pageNumber, pageSize) {
+export function listInstitution (pageNumber, pageSize, institutionName, addr) {
   return request({
     url: '/api/institution/listInsitution',
-    method: 'get',
-    params: {
-      pageNumber,
-      pageSize
+    method: 'POST',
+    data: {
+      pageNumber: pageNumber,
+      pageSize: pageSize,
+      institutionName: institutionName,
+      addr: addr
     }
   })
 }
+
 /**
  * 通过id获取单个机构信息
  * @export
@@ -47,6 +54,7 @@ export function getInstitution (id) {
     }
   })
 }
+
 /**
  * 删除机构
  * @export
@@ -62,6 +70,7 @@ export function deleteInstitution (institutionIds) {
     }
   })
 }
+
 /**
  * 部门管理
  */
@@ -78,23 +87,29 @@ export function addOrUpdateDepartment (obj) {
     data: obj
   })
 }
+
 /**
  * 通过搜索条件分页获取全部部门信息
  * @export
  * @param {any} pageNumber
  * @param {any} pageSize
+ * @param {any} departmentName
+ * @param {any} addr
  * @returns data
  */
-export function listDepartment (pageNumber, pageSize) {
+export function listDepartment (pageNumber, pageSize, departmentName, addr) {
   return request({
     url: '/api/department/listDepartment',
-    method: 'get',
-    params: {
-      pageNumber,
-      pageSize
+    method: 'POST',
+    data: {
+      pageNumber: pageNumber,
+      pageSize: pageSize,
+      departmentName: departmentName,
+      addr: addr
     }
   })
 }
+
 /**
  * 通过id获取单个部门信息
  * @export
@@ -110,6 +125,7 @@ export function getDepartment (id) {
     }
   })
 }
+
 /**
  * 删除部门
  * @export
@@ -125,6 +141,7 @@ export function deleteDepartment (departmentIds) {
     }
   })
 }
+
 /**
  * 用户管理
  */
@@ -141,6 +158,7 @@ export function addOrUpdateUser (obj) {
     data: obj
   })
 }
+
 /**
  * 通过搜索条件分页获取用户信息
  * @export
@@ -159,6 +177,7 @@ export function listUser (pageNumber, pageSize, userType) {
     }
   })
 }
+
 /**
  * 通过用户id获取单个用户信息
  * @export
@@ -174,6 +193,7 @@ export function getUser (id) {
     }
   })
 }
+
 /**
  * 通过id删除用户信息
  * @export
@@ -189,6 +209,7 @@ export function deleteUser (userIds) {
     }
   })
 }
+
 /**
  * 更改用户密码
  * @export
@@ -203,6 +224,7 @@ export function updateUserPwd (obj) {
     data: obj
   })
 }
+
 /**
  * 返回所有在线用户（不分页）
  * @export
@@ -215,6 +237,7 @@ export function listOnlineUser () {
     params: {}
   })
 }
+
 /**
  * 返回日志
  * @export
@@ -223,7 +246,7 @@ export function listOnlineUser () {
 export function listUserOpLog (obj) {
   return request({
     url: '/api/user/listUserOpLog',
-    method: 'get',
-    params: obj
+    method: 'POST',
+    data: obj
   })
 }

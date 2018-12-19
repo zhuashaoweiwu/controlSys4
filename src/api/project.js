@@ -1,21 +1,27 @@
 import request from '@/utils/request'
+
 /**
  * 获取项目列表
  * @export
  * @param {any} pageNumber
  * @param {any} pageSize
+ * @param {any} projectName
+ * @param {any} projectCode
  * @returns obj
  */
-export function listProject (pageNumber, pageSize) {
+export function listProject (pageNumber, pageSize, projectName, projectCode) {
   return request({
     url: '/api/project/listproject',
-    method: 'get',
-    params: {
-      pageNumber,
-      pageSize
+    method: 'POST',
+    data: {
+      pageNumber: pageNumber,
+      pageSize: pageSize,
+      projectName: projectName,
+      projectCode: projectCode
     }
   })
 }
+
 /**
  * 删除项目
  * @export
@@ -31,6 +37,7 @@ export function DelectProject (idList) {
     }
   })
 }
+
 /**
  * 添加项目
  * @export
@@ -44,21 +51,23 @@ export function addProject (project) {
     data: project
   })
 }
+
 /**
  * 获取单个项目,用以更新项目
  * @export
  * @param {any} codeNumber
  * @returns obj
  */
-export function getProject (codeNumber) {
+export function getProject (id) {
   return request({
     url: '/api/project/getproject',
-    method: 'get',
-    params: {
-      codeNumber
+    method: 'POST',
+    data: {
+      id: id
     }
   })
 }
+
 /**
  * 更新项目
  * @export
@@ -68,10 +77,11 @@ export function getProject (codeNumber) {
 export function updateProject (project) {
   return request({
     url: '/api/project/updateproject',
-    method: 'post',
+    method: 'POST',
     data: project
   })
 }
+
 /**
  * 获取国家列表
  * @export
@@ -89,6 +99,7 @@ export function listCountry (pageNumber, pageSize) {
     }
   })
 }
+
 /**
  * 获取省份列表
  * @export
@@ -106,6 +117,7 @@ export function listProvince (pageNumber, pageSize) {
     }
   })
 }
+
 /**
  * 获取城市列表
  * @export
@@ -123,6 +135,7 @@ export function listCity (pageNumber, pageSize) {
     }
   })
 }
+
 /**
  * 添加/修改国家
  * @export
@@ -136,6 +149,7 @@ export function addOrUpdateCountry (obj) {
     data: obj
   })
 }
+
 /**
  * 添加/修改省份
  * @export
@@ -149,6 +163,7 @@ export function addOrUpdateProvince (obj) {
     data: obj
   })
 }
+
 /**
  * 添加/修改城市
  * @export
@@ -162,6 +177,7 @@ export function addOrUpdateCity (obj) {
     data: obj
   })
 }
+
 /**
  * 获取单个国家
  * @export
@@ -177,6 +193,7 @@ export function getOneCountry (codeNumber) {
     }
   })
 }
+
 /**
  * 获取单个省份
  * @export
@@ -192,6 +209,7 @@ export function getOneProvince (codeNumber) {
     }
   })
 }
+
 /**
  * 获取单个城市
  * @export

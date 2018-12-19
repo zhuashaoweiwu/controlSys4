@@ -34,9 +34,9 @@ export function listElebox (projectId, pageNumber, pageSize) {
 export function listLighting (projectId) {
   return request({
     url: '/api/gis/listLighting',
-    method: 'get',
-    params: {
-      projectId
+    method: 'POST',
+    data: {
+      projectId: projectId
     }
   })
 }
@@ -313,6 +313,22 @@ export function commandLightAdjust (lightPercent) {
     method: 'get',
     params: {
       lightPercent
+    }
+  })
+}
+
+/**
+ * 删除灯具分组
+ * @export
+ * @param {*}
+ * @returns
+ */
+export function deleteLightGroup (lightGroupArray) {
+  return request({
+    url: '/api/lightGroup/deleteLightGroup',
+    method: 'POST',
+    data: {
+      lightGroupIdArray: lightGroupArray
     }
   })
 }

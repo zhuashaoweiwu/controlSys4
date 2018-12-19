@@ -2,13 +2,11 @@
   <div class="system-container">
     <div class="system-top clearfix">
       <div class="item-block f-l">
-        <span class="title">xxx</span><el-input  placeholder="请输入内容"></el-input>
-      </div>
-      <div class="item-block f-l">
-        <span class="title">xx</span><el-input  placeholder="请输入内容"></el-input>
+        <span class="title">型号名称</span>
+        <el-input placeholder="请输入内容" v-model="lightModelName"></el-input>
       </div>
       <div class="btn-block f-r">
-        <el-button type="primary">查询</el-button>
+        <el-button type="primary" @click="getListLightModel">查询</el-button>
       </div>
     </div>
     <div class="system-center">
@@ -95,8 +93,8 @@
     </div>
     <!-- 修改 增加灯具-->
     <el-dialog title="添加灯具类型"
-    :visible.sync="addLightDialog" :close-on-click-modal='false' :close-on-press-escape='false' center
-    :before-close="handleCloseDialog">
+               :visible.sync="addLightDialog" :close-on-click-modal='false' :close-on-press-escape='false' center
+               :before-close="handleCloseDialog">
       <el-form ref="addEditLightTypeForm" :model="newLight" :rules="addNewLightRules" label-width="100px">
         <el-form-item label="型号名称" required prop="modelName">
           <el-input class="width350" v-model="newLight.modelName"></el-input>
@@ -130,168 +128,177 @@
   </div>
 </template>
 <script>
-import { listLightModel, deleteLightModel, addOrUpdateLightModel } from '@/api/RoadLighting/EquipmentType'
-export default {
-  name: 'LightType',
-  data () {
-    return {
-      pageNumber: 1,
-      pageSize: 10,
-      multipleSelection: [],
-      currentPage: 1,
-      allTotal: null,
-      LightList: [],
-      addOrUpdateStatus: null,
-      newLight: {},
-      addLightDialog: false,
-      addNewLightRules: {
-        modelName: [
-          { required: true, message: '填写内容不得为空', trigger: 'blur' }
-        ],
-        ratedVoltage: [
-          { required: true, message: '填写内容不得为空', trigger: 'blur' }
-        ],
-        ratedElectric: [
-          { required: true, message: '填写内容不得为空', trigger: 'blur' }
-        ],
-        ratedPower: [
-          { required: true, message: '填写内容不得为空', trigger: 'blur' }
-        ],
-        ledCount: [
-          { required: true, message: '填写内容不得为空', trigger: 'blur' }
-        ]
-      }
-    }
-  },
-  methods: {
-    handleSelectionChange (val) {
-      this.multipleSelection = val
-    },
-    handleCurrentChange (val) {
-      this.pageNumber = val
-      this.getListLightModel()
-      // 翻页请求
-    },
-    handleSizeChange (val) {
-      this.pageSize = val
-      this.getListLightModel()
-    },
-    getListLightModel () {
-      let that = this
-      listLightModel(that.pageNumber, that.pageSize).then(response => {
-        that.LightList = response.data
-        if (that.LightList.length > 0) {
-          this.allTotal = response.total
-        } else {
-          this.allTotal = 0
-        }
-      }).catch(error => {
-        console.log(error)
-      })
-    },
-    addCabinet () {
-      this.addLightDialog = true
-      this.addOrUpdateStatus = 'add'
-    },
-    deleteRow (type, e) {
-      let _array = []
-      if (type === 1) {
-        _array.push(this.LightList[e].id)
-      } else {
-        if (this.multipleSelection.length > 0) {
-          this.multipleSelection.forEach(selectedItem => {
-            // 取出所有待删除选项id
-            _array.push(selectedItem.id)
-          })
-        } else {
-          this.$message({
-            message: '请勾选需要删除的数据',
-            type: 'warning'
-          })
+  import {listLightModel, deleteLightModel, addOrUpdateLightModel} from '@/api/RoadLighting/EquipmentType'
+
+  export default {
+    name: 'LightType',
+    data () {
+      return {
+        pageNumber: 1,
+        pageSize: 10,
+        lightModelName: '',
+        multipleSelection: [],
+        currentPage: 1,
+        allTotal: null,
+        LightList: [],
+        addOrUpdateStatus: null,
+        newLight: {},
+        addLightDialog: false,
+        addNewLightRules: {
+          modelName: [
+            {required: true, message: '填写内容不得为空', trigger: 'blur'}
+          ],
+          ratedVoltage: [
+            {required: true, message: '填写内容不得为空', trigger: 'blur'}
+          ],
+          ratedElectric: [
+            {required: true, message: '填写内容不得为空', trigger: 'blur'}
+          ],
+          ratedPower: [
+            {required: true, message: '填写内容不得为空', trigger: 'blur'}
+          ],
+          ledCount: [
+            {required: true, message: '填写内容不得为空', trigger: 'blur'}
+          ]
         }
       }
-      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        deleteLightModel(_array).then(response => {
-          // that.projectList.splice(e, 1)
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
-          this.getListLightModel()
+    },
+    watch: {
+      LightList: function (val) {
+        console.log(val)
+      }
+    },
+    methods: {
+      handleSelectionChange (val) {
+        this.multipleSelection = val
+      },
+      handleCurrentChange (val) {
+        this.pageNumber = val
+        this.getListLightModel()
+        // 翻页请求
+      },
+      handleSizeChange (val) {
+        this.pageSize = val
+        this.getListLightModel()
+      },
+      getListLightModel () {
+        let that = this
+        listLightModel(that.pageNumber, that.pageSize, that.lightModelName).then(response => {
+          that.LightList = response.data
+          if (that.LightList.length > 0) {
+            this.allTotal = response.total
+          } else {
+            this.allTotal = 0
+          }
         }).catch(error => {
           console.log(error)
         })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
+      },
+      addCabinet () {
+        this.addLightDialog = true
+        this.addOrUpdateStatus = 'add'
+      },
+      deleteRow (type, e) {
+        let _array = []
+        if (type === 1) {
+          _array.push(this.LightList[e].id)
+        } else {
+          if (this.multipleSelection.length > 0) {
+            this.multipleSelection.forEach(selectedItem => {
+              // 取出所有待删除选项id
+              _array.push(selectedItem.id)
+            })
+          } else {
+            this.$message({
+              message: '请勾选需要删除的数据',
+              type: 'warning'
+            })
+          }
+        }
+        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          deleteLightModel(_array).then(response => {
+            // that.projectList.splice(e, 1)
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+            this.getListLightModel()
+          }).catch(error => {
+            console.log(error)
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
         })
-      })
-    },
-    editRow (e) {
-      this.addOrUpdateStatus = 'edit'
-      this.newLight = this.LightList[e]
-      this.addLightDialog = true
-    },
-    onSubmit () {
-      let _text
-      if (this.addOrUpdateStatus === 'add') {
-        _text = '添加成功'
-      } else {
-        _text = '修改成功'
+      },
+      editRow (e) {
+        this.addOrUpdateStatus = 'edit'
+        this.newLight = this.LightList[e]
+        this.addLightDialog = true
+      },
+      onSubmit () {
+        let _text
+        if (this.addOrUpdateStatus === 'add') {
+          _text = '添加成功'
+        } else {
+          _text = '修改成功'
+        }
+        addOrUpdateLightModel(this.newLight).then(response => {
+          this.$message({
+            type: 'success',
+            message: _text
+          })
+          this.getListLightModel()
+          this.addLightDialog = false
+          this.handleCloseDialog()
+        }).catch(error => {
+          console.log(error)
+        })
+      },
+      // 弹窗关闭时将数据清空
+      handleCloseDialog (done) {
+        this.newLight = {}
+        this.$refs['addEditLightTypeForm'].resetFields()
+        done()
       }
-      addOrUpdateLightModel(this.newLight).then(response => {
-        this.$message({
-          type: 'success',
-          message: _text
-        })
-        this.getListLightModel()
-        this.addLightDialog = false
-        this.handleCloseDialog()
-      }).catch(error => {
-        console.log(error)
-      })
     },
-    // 弹窗关闭时将数据清空
-    handleCloseDialog (done) {
-      this.newLight = {}
-      this.$refs['addEditLightTypeForm'].resetFields()
-      done()
+    created () {
+      this.getListLightModel()
+    },
+    destroyed () {
     }
-  },
-  created () {
-    this.getListLightModel()
-  },
-  destroyed () {
   }
-}
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
-/* reset element-ui css */
-.el-tabs__nav-scroll{
-  padding: 0 40px;
-}
-.el-tabs__header{
-  margin-bottom: 0
-}
-.el-tabs__item{
-  height: 70px;
-  line-height: 70px;
-  font-size: 16px
-}
+  /* reset element-ui css */
+  .el-tabs__nav-scroll {
+    padding: 0 40px;
+  }
+
+  .el-tabs__header {
+    margin-bottom: 0
+  }
+
+  .el-tabs__item {
+    height: 70px;
+    line-height: 70px;
+    font-size: 16px
+  }
 </style>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-.system-container{
-  .system-top{
-    .item-block{
-        padding: 0px 30px 0px 55px;
+  .system-container {
+    .system-top {
+      .item-block {
+        padding: 0px 30px 0px 20px;
+      }
     }
   }
-}
 </style>

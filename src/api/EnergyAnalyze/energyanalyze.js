@@ -17,8 +17,7 @@ export function getCommonEnergyStatistic () {
   return request({
     url: '/api/energyStatistic/getCommonEnergyStatistic',
     method: 'get',
-    params: {
-    }
+    params: {}
   })
 }
 
@@ -32,8 +31,8 @@ export function getCommonEnergyStatistic () {
 export function listEnergyStatisticByDay (month) {
   return request({
     url: '/api/energyStatistic/listEnergyStatisticByDay',
-    method: 'get',
-    params: {
+    method: 'POST',
+    data: {
       month: month
     }
   })

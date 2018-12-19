@@ -7,12 +7,13 @@
     .item-block {
       width: 27%;
       position: relative;
-      padding: 0 30px 0 37px;
+      padding: 0 30px 0 20px;
       .title {
-        position: absolute;
-        left: 0;
-        top: 0;
-        margin-top: 9px;
+        display: inline-block;
+        width: 25%;
+      }
+      .el-input{
+        width: 72%;
       }
     }
   }

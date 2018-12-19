@@ -13,7 +13,8 @@ import store from '../store'
 
 // 创建axios实例
 const service = axios.create({
-  baseURL: process.env.TEST_API, // api的base_url
+  // baseURL: process.env.TEST_API, // api的base_url
+  baseURL: 'http://103.48.232.124:8080/nnlightctl', // api的base_url
   timeout: 15000 // 请求超时时间
 })
 

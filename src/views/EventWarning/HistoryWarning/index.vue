@@ -1,58 +1,34 @@
 /*
- * @Author: Ouber23
- * @Date: 2018-08-14 04:49:28
- * @LastEditors: Ouber23
- * @LastEditTime: 2018-08-14 04:54:59
- */
+* @Author: Ouber23
+* @Date: 2018-08-14 04:49:28
+* @LastEditors: Ouber23
+* @LastEditTime: 2018-08-14 04:54:59
+*/
 <template>
   <div id="EleboxWarning">
     <div id="searchForm">
-      <el-form :inline="true" :model="formInline" class="demo-form-inline">
-        <el-form-item label="控制柜">
-          <el-select v-model="formInline.elebox" placeholder="控制柜">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="状态">
-          <el-select v-model="formInline.states" placeholder="状态">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
-          </el-select>
-        </el-form-item>   
-        <el-form-item label="类型">
-          <el-select v-model="formInline.type" placeholder="类型">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="UID">
-          <el-input v-model="formInline.uid" placeholder="uid"></el-input>
-        </el-form-item>
-        <el-form-item label="等级">
-          <el-select v-model="formInline.level" placeholder="等级">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="日期">
-          <el-date-picker
-            v-model="formInline.date"
-            type="date"
-            placeholder="选择日期">
-          </el-date-picker>
-        </el-form-item>
+      <el-form :inline="true" class="demo-form-inline">
+        <span class="demonstration">起止时间</span>
+        <el-date-picker
+          v-model="alarmTimeValue"
+          type="datetimerange"
+          :picker-options="pickerOptions"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          align="right">
+        </el-date-picker>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">查询</el-button>
+          <el-button type="primary" @click="getHistoryAlarmData">查询</el-button>
         </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="onResume">重置</el-button>
-        </el-form-item>
+        <!--<el-form-item>-->
+        <!--<el-button type="primary" @click="onResume">重置</el-button>-->
+        <!--</el-form-item>-->
       </el-form>
     </div>
     <div id="dataTable">
       <div class="operator">
-
+        <el-button type="primary" icon="el-icon-delete" @click="clearAlarmHistory" :disabled="!selectIds.length">清理历史报警</el-button>
       </div>
       <el-table
         :data="tableData"
@@ -120,10 +96,10 @@
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :current-page.sync="currentPage3"
+          :current-page.sync="pageNumber"
           :page-size="10"
           layout="prev, pager, next, jumper"
-          :total="39">
+          :total="pageTotal">
         </el-pagination>
       </div>
     </div>
@@ -131,133 +107,102 @@
 </template>
 
 <script>
-// import Vue from 'vue'
-// import { listElebox } from '@/api/GisService/lamp'
-// import { getLighting } from '@/api/RoadLighting/deploy'
-import { listAlarmHistory } from '@/api/EventWarning/EventWarning'
-import '../../../utils/filter.js'
-import moment from 'moment';
-export default {
-  name: 'Elebox',
-  data () {
-    return {
-      formInline: {
-        elebox: '',
-        states: '',
-        level: '',
-        type: '',
-        date: '',
-        uid: ''
-      },
-      tableData: [{
-        state: '良好',
-        alarmLevel: '三级警报',
-        codeNumber: '控制柜一/上海市普陀区金沙江路 1518 弄',
-        alarmSource: '上海xxxx',
-        name: 'XXX警报',
-        ctype: '普通灯警报',
-        gmtCreated: 'e222323',
-        gmtUpdated: '201-121',
-        nnlightctlAlarmConfigId: '11',
-        alarmTime: '2016-05-02',
-        msg: '事件报警',
-        alarmCount: '3'
-      },
-      {
-        state: '良好',
-        alarmLevel: '三级警报',
-        codeNumber: '控制柜一/上海市普陀区金沙江路 1518 弄',
-        alarmSource: '上海xxxx',
-        name: 'XXX警报',
-        ctype: '普通灯警报',
-        gmtCreated: 'e222323',
-        gmtUpdated: '201-121',
-        nnlightctlAlarmConfigId: '11',
-        alarmTime: '2016-05-02',
-        msg: '事件报警',
-        alarmCount: '3'
-      },
-      {
-        state: '良好',
-        alarmLevel: '三级警报',
-        codeNumber: '控制柜一/上海市普陀区金沙江路 1518 弄',
-        alarmSource: '上海xxxx',
-        name: 'XXX警报',
-        ctype: '普通灯警报',
-        gmtCreated: 'e222323',
-        gmtUpdated: '201-121',
-        nnlightctlAlarmConfigId: '11',
-        alarmTime: '2016-05-02',
-        msg: '事件报警',
-        alarmCount: '3'
-      },
-      {
-        state: '良好',
-        alarmLevel: '三级警报',
-        codeNumber: '控制柜一/上海市普陀区金沙江路 1518 弄',
-        alarmSource: '上海xxxx',
-        name: 'XXX警报',
-        ctype: '普通灯警报',
-        gmtCreated: 'e222323',
-        gmtUpdated: '201-121',
-        nnlightctlAlarmConfigId: '11',
-        alarmTime: '2016-05-02',
-        msg: '事件报警',
-        alarmCount: '3'
-      }],
-      currentPage3: 5,
-    }
-  },
-  computed: {
-  },
-  methods: {
-    getHisAlarmData (pageNumber, pageSize) {
-      listAlarmHistory(pageNumber, pageSize).then((res)=>{
-        console.log(res, '历史数据')
-        // that.tableData =res.data //数据初始化
-      })
-    },
-     //时间格式化
-    dateFormat:function(row, column) {
-      var date = row[column.property];
-      if (date == undefined) {
-        return "";
-      }
-        return moment(date).format("YYYY-MM-DD HH:mm:ss");
-    },
-    onSubmit () {
-      console.log('submit!');
-    },
-    onResume () {
-      console.log('resume')
-    },
-    toggleSelection(rows) {
-      if (rows) {
-        rows.forEach(row => {
-          this.$refs.multipleTable.toggleRowSelection(row);
-        });
-      } else {
-        this.$refs.multipleTable.clearSelection();
+  import {listAlarmHistory, clearAlarmHistory} from '@/api/EventWarning/EventWarning'
+  import '../../../utils/filter.js'
+  import moment from 'moment'
+
+  export default {
+    name: 'Elebox',
+    data () {
+      return {
+        tableData: [],
+        pickerOptions: {
+          shortcuts: [{
+            text: '最近一周',
+            onClick (picker) {
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '最近一个月',
+            onClick (picker) {
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '最近三个月',
+            onClick (picker) {
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+              picker.$emit('pick', [start, end])
+            }
+          }]
+        },
+        selectIds: [], // 选中的id数组
+        alarmDetailData: [],
+        pageNumber: 1,
+        pageSize: 10,
+        alarmSource: '控制柜',
+        alarmTimeValue: [],
+        pageTotal: 0
       }
     },
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
+    computed: {},
+    methods: {
+      handleSelectionChange (val) {
+        this.multipleSelection = val
+        if (val) {
+          this.selectIds = val.map((item, index) => {
+            return item.id
+          })
+        }
+        console.log(this.selectIds)
+      },
+      getHistoryAlarmData () {
+        let start = this.alarmTimeValue[0] && this.alarmTimeValue[0].toString()
+        let end = this.alarmTimeValue[1] && this.alarmTimeValue[1].toString()
+        listAlarmHistory(this.pageNumber, this.pageSize, start, end).then((res) => {
+          if (res.total % 10 < 10) {
+            this.pageTotal = this.pageNumber
+          } else {
+            this.pageTotal = this.pageNumber * 10 + 1
+          }
+          // console.log(res, '历史数据')
+          this.tableData = res.data // 数据初始化
+        })
+      },
+      clearAlarmHistory () {
+        clearAlarmHistory(this.selectIds).then(res => {
+          this.$message({
+            message: '清除成功',
+            type: 'success'
+          })
+        })
+      },
+      // 时间格式化
+      dateFormat: function (row, column) {
+        var date = row[column.property]
+        if (date === undefined) {
+          return ''
+        }
+        return moment(date).format('YYYY-MM-DD HH:mm:ss')
+      },
+      handleSizeChange (val) {
+        console.log(`每页 ${val} 条`)
+      },
+      handleCurrentChange (val) {
+        console.log(`当前页: ${val}`)
+      }
     },
-    // currentPage3 () {
-    //   return 1
-    // },
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
-    },
-    handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+    created () {
+      this.getHistoryAlarmData()
     }
-  },
-  created () {
-    let that = this
-    that.getHisAlarmData(1, 20)
   }
-}
 </script>
 
 <style lang="scss" scoped>
@@ -265,9 +210,21 @@ export default {
     padding-left: 32px;
     padding-top: 10px;
   }
+
   #dataTable {
     padding-left: 32px;
     padding-top: 10px;
     padding-right: 32px;
+  }
+
+  .demonstration {
+    font-size: 14px;
+    color: #606266;
+    font-weight: 700;
+    padding-right: 10px;
+  }
+
+  .operator {
+    margin-bottom: 20px;
   }
 </style>

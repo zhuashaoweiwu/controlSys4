@@ -1,6 +1,7 @@
 // 事件报警API
 
 import request from '@/utils/request'
+
 /**
  * 1、获取实时报警数据
  * @export
@@ -8,13 +9,16 @@ import request from '@/utils/request'
  *
  * @returns
  */
-export function getListAlarm (pageNumber, pageSize) {
+export function getListAlarm (pageNumber, pageSize, alarmSource, alarmTimeStart, alarmTimeEnd) {
   return request({
     url: '/api/alarm/listAlarm',
-    method: 'get',
-    params: {
-        pageNumber: pageNumber,
-        pageSize: pageSize
+    method: 'post',
+    data: {
+      pageNumber: pageNumber,
+      pageSize: pageSize,
+      alarmSource: alarmSource,
+      alarmTimeStart: alarmTimeStart,
+      alarmTimeEnd: alarmTimeEnd
     }
   })
 }
@@ -27,12 +31,11 @@ export function getListAlarm (pageNumber, pageSize) {
  * @returns
  */
 export function getAlarm () {
-    return request({
-      url: '/api/alarm/getAlarm',
-      method: 'get',
-      params: {
-      }
-    })
+  return request({
+    url: '/api/alarm/getAlarm',
+    method: 'get',
+    params: {}
+  })
 }
 
 /**
@@ -43,13 +46,13 @@ export function getAlarm () {
  * @returns
  */
 export function exportAlarm (alarmIds) {
-    return request({
-      url: '/api/alarm/exportAlarm',
-      method: 'get',
-      params: {
-        alarmIds: alarmIds
-      }
-    })
+  return request({
+    url: '/api/alarm/exportAlarm',
+    method: 'get',
+    params: {
+      alarmIds: alarmIds
+    }
+  })
 }
 
 /**
@@ -61,20 +64,13 @@ export function exportAlarm (alarmIds) {
  * @returns
  */
 export function clearAlarm (alarmIds) {
-    console.log(alarmIds)
-    let ids = {}
-    if(alarmIds) {
-      for (let i = 0; i<alarmIds.length; i++) {
-        let key = `alarmIds[${i}]`
-        ids[key] = alarmIds[i]
-      }
+  return request({
+    url: '/api/alarm/clearAlarm',
+    method: 'post',
+    data: {
+      alarmIds: alarmIds
     }
-    
-    return request({
-      url: '/api/alarm/clearAlarm',
-      method: 'get',
-      params: ids
-    })
+  })
 }
 
 /**
@@ -85,15 +81,17 @@ export function clearAlarm (alarmIds) {
  *
  * @returns
  */
-export function listAlarmHistory (pageNumber, pageSize) {
-    return request({
-      url: '/api/alarm/listAlarmHistory',
-      method: 'get',
-      params: {
-        pageNumber: pageNumber,
-        pageSize: pageSize
-      }
-    })
+export function listAlarmHistory (pageNumber, pageSize, startTime, endTime) {
+  return request({
+    url: '/api/alarm/listAlarmHistory',
+    method: 'post',
+    data: {
+      pageNumber: pageNumber,
+      pageSize: pageSize,
+      startTime: startTime,
+      endTime: endTime
+    }
+  })
 }
 
 /**
@@ -105,13 +103,13 @@ export function listAlarmHistory (pageNumber, pageSize) {
  * @returns
  */
 export function clearAlarmHistory (alarmHistoryIds) {
-    return request({
-      url: '/api/alarm/clearAlarmHistory',
-      method: 'get',
-      params: {
-        alarmHistoryIds: alarmHistoryIds
-      }
-    })
+  return request({
+    url: '/api/alarm/clearAlarmHistory',
+    method: 'POST',
+    data: {
+      alarmHistoryIds: alarmHistoryIds
+    }
+  })
 }
 
 /**
@@ -123,13 +121,13 @@ export function clearAlarmHistory (alarmHistoryIds) {
  * @returns
  */
 export function exportAlarmHistory (alarmHistoryIds) {
-    return request({
-      url: '/api/alarm/exportAlarmHistory',
-      method: 'get',
-      params: {
-        alarmHistoryIds: alarmHistoryIds
-      }
-    })
+  return request({
+    url: '/api/alarm/exportAlarmHistory',
+    method: 'get',
+    params: {
+      alarmHistoryIds: alarmHistoryIds
+    }
+  })
 }
 
 /**
@@ -149,19 +147,20 @@ export function exportAlarmHistory (alarmHistoryIds) {
  * Byte isNoticeWeixin; -- 是否微信通知
 
  * )
- * 
+ *
  *
  * @returns
  */
 export function configAlarm (configAlarm) {
-    return request({
-      url: '/api/alarm/configAlarm',
-      method: 'get',
-      params: configAlarm
-    })
+  return request({
+    url: '/api/alarm/configAlarm',
+    method: 'get',
+    params: configAlarm
+  })
 }
+
 /**
- * 9. 是否开启警报设置 
+ * 9. 是否开启警报设置
  */
 export function configIsUseAlarm (configAlarm) {
   return request({

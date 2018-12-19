@@ -14,13 +14,12 @@ import request from '@/utils/request'
  * @param {*} pageSize
  * @returns
  */
-export function listProject (pageNumber, pageSize) {
+export function listProject (projectName) {
   return request({
     url: '/api/project/listproject',
     method: 'post',
-    params: {
-      pageNumber,
-      pageSize
+    data: {
+      projectName: projectName
     }
   })
 }

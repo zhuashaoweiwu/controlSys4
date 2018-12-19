@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+
 /**
  * 添加控制柜
  * @export
@@ -16,6 +17,7 @@ export function addEleBox (deviceList, count) {
     }
   })
 }
+
 /**
  * 编辑控制柜
  * @export
@@ -29,6 +31,7 @@ export function updateEleBox (obj) {
     data: obj
   })
 }
+
 /**
  * 编辑控制柜设备
  * @export
@@ -48,6 +51,7 @@ export function updateEleboxDevice (id, deleteModelIdList, addModelIdList) {
     }
   })
 }
+
 /**
  * 回路拆分
  * @export
@@ -65,6 +69,7 @@ export function modelLoopSplite (beSplitId, splitModelLoopList) {
     }
   })
 }
+
 /**
  * 删除控制柜
  * @export
@@ -80,6 +85,7 @@ export function deleteElebox (eleboxIdList) {
     }
   })
 }
+
 /**
  * 分页显示控制柜信息
  * @export
@@ -87,14 +93,15 @@ export function deleteElebox (eleboxIdList) {
  * @param {any} pageSize
  * @returns
  */
-export function listElebox (pageNumber, pageSize, eleboxId) {
+export function listElebox (pageNumber, pageSize, uid, codeNumber) {
   return request({
     url: '/api/roadlighting/listelebox',
-    method: 'get',
-    params: {
-      pageNumber,
-      pageSize,
-      eleboxId
+    method: 'POST',
+    data: {
+      pageNumber: pageNumber,
+      pageSize: pageSize,
+      uid: uid,
+      codeNumber: codeNumber
     }
   })
 }
@@ -108,6 +115,7 @@ export function listElebox2 (eleboxId) {
     }
   })
 }
+
 /**
  * 分页获取某一控制柜下全部模块
  * @export
@@ -117,6 +125,7 @@ export function listElebox2 (eleboxId) {
  * @returns
  */
 let nnlightctlEleboxId
+
 export function listEleboxModel (eleboxId, pageNumber, pageSize) {
   return request({
     url: '/api/roadlighting/listmodel',
@@ -141,6 +150,7 @@ export function listEleboxModel2 (eleboxId, pageNumber, pageSize) {
     }
   })
 }
+
 /**
  * 获取某一模块下全部回路
  * @export
@@ -166,6 +176,7 @@ export function listModelLoopList (modelId) {
     }
   })
 }
+
 /**
  * 添加设备
  * @export
@@ -181,6 +192,7 @@ export function addEleboxModel (obj) {
     }
   })
 }
+
 /**
  * 修改设备
  * 修改设备不允许修改设备回路
@@ -197,6 +209,7 @@ export function updateEleboxModel (obj) {
     }
   })
 }
+
 /**
  * 修改添加回路
  * @export
@@ -212,20 +225,20 @@ export function addOrUpdateModelLoop (obj) {
     }
   })
 }
+
 // 灯具页面相关接口
-export function listLighting (pageNumber, pageSize, eleboxId, notBe) {
+export function listLighting (pageNumber, pageSize, uuid, lightingCode) {
   return request({
     url: '/api/roadlighting/listLighting',
-    method: 'get',
-    params: {
-      pageNumber,
-      pageSize,
-      eleboxId,
-      notBe
+    method: 'post',
+    data: {
+      pageNumber: pageNumber,
+      pageSize: pageSize,
+      uuid: uuid,
+      lightingCode: lightingCode
     }
   })
 }
-
 
 export function listLightingList (pageNumber, pageSize, eleboxId, notBe) {
   return request({
@@ -239,6 +252,7 @@ export function listLightingList (pageNumber, pageSize, eleboxId, notBe) {
     }
   })
 }
+
 export function listLightingData (notBe) {
   return request({
     url: '/api/roadlighting/listLighting',
@@ -248,6 +262,7 @@ export function listLightingData (notBe) {
     }
   })
 }
+
 /**
  * 删除灯具
  * @export
@@ -263,6 +278,7 @@ export function deleteLighting (deleteLightIdList) {
     }
   })
 }
+
 // 通过id获取单个灯具信息
 export function getLighting (id) {
   return request({
@@ -273,6 +289,7 @@ export function getLighting (id) {
     }
   })
 }
+
 /**
  * 添加编辑灯具
  * @export
@@ -286,6 +303,7 @@ export function addOrUpdateLighting (obj) {
     data: obj
   })
 }
+
 /**
  * 批量添加灯具
  * @export
@@ -301,6 +319,7 @@ export function addLighting (addLightings) {
     }
   })
 }
+
 // 批量编辑灯具所属控制柜
 export function updateLightBeElebox (lightIdList, beEleboxId) {
   return request({
@@ -312,17 +331,20 @@ export function updateLightBeElebox (lightIdList, beEleboxId) {
     }
   })
 }
+
 // 获取区域列表相关接口
-export function listArea (pageNumber, pageSize) {
+export function listArea (pageNumber, pageSize, areaName) {
   return request({
     url: '/api/roadlighting/listArea',
-    method: 'get',
-    params: {
-      pageNumber,
-      pageSize
+    method: 'POST',
+    data: {
+      pageNumber: pageNumber,
+      pageSize: pageSize,
+      areaName: areaName
     }
   })
 }
+
 /**
  * 添加编辑区域
  * @export
@@ -336,6 +358,7 @@ export function addOrUpdateArea (obj) {
     data: obj
   })
 }
+
 /**
  * 删除区域
  * @export
@@ -351,6 +374,7 @@ export function deleteArea (areaIdList) {
     }
   })
 }
+
 /**
  * 获取GIS列表相关接口
  * @export
@@ -370,6 +394,7 @@ export function listGIS (pageNumber, pageSize, type) {
     }
   })
 }
+
 /**
  * 添加编辑GIS
  * @export
@@ -383,6 +408,7 @@ export function addOrUpdateGIS (obj) {
     data: obj
   })
 }
+
 /**
  * 删除配电柜或者灯具的GIS信息
  * @export
@@ -400,6 +426,7 @@ export function deleteGIS (gisIDList, type) {
     }
   })
 }
+
 /**
  * 控制柜的批量导出
  * @export
@@ -415,6 +442,7 @@ export function exportElebox (eleboxIdList) {
     }
   })
 }
+
 /**
  * 灯具的批量导出
  * @export
@@ -430,6 +458,7 @@ export function exportLighting (lightIdList) {
     }
   })
 }
+
 /**
  * 获取指定回路的所有灯具
  * @export
@@ -456,6 +485,7 @@ export function getLoopLight1 (id, priority) {
     }
   })
 }
+
 /**
  * 更新灯具所属控制柜和所属回路
  * @export
@@ -506,7 +536,6 @@ export function listProject () {
   return request({
     url: '/api/project/listproject',
     method: 'get',
-    data: {
-    }
+    data: {}
   })
 }

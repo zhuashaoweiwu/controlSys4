@@ -1,9 +1,10 @@
 <template>
   <div class="system-container">
       <div class="system-top clearfix">
-        <el-input placeholder="请输入内容" class="input-with-select">
-        </el-input>
-        <el-button slot="append" type="primary"  icon="el-icon-search"></el-button>
+        <!--<el-input placeholder="请输入要搜索的在线用户" class="input-with-select">-->
+        <!--</el-input>-->
+        <!--<el-button slot="append" type="primary"  icon="el-icon-search"></el-button>-->
+        以下是所有在线用户：
       </div>
       <div class="system-center">
         <div class="data-list">

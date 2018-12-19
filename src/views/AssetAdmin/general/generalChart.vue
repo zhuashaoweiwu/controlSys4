@@ -21,16 +21,21 @@
       return {}
     },
     mounted () {
-      this.drawLine()
-      this.ddd()
+      this.repairPie()
+      this.monthNumber()
     },
     methods: {
-      drawLine () {
+      repairPie () {
         // 基于准备好的dom，初始化echarts实例
         let myChart = this.$echarts.init(document.getElementById('myChart'))
         // 绘制图表
         myChart.setOption(
           {
+            title: {
+              text: '设备维修情况分布',
+              // subtext: '纯属虚构',
+              x: 'center'
+            },
             tooltip: {
               trigger: 'item',
               formatter: '{a} <br/>{b}: {c} ({d}%)'
@@ -38,11 +43,11 @@
             legend: {
               orient: 'vertical',
               x: 'center',
-              data: ['灯具', '灯杆']
+              data: ['故障个数', '灯杆']
             },
             series: [
               {
-                name: '访问来源',
+                name: '维修情况',
                 type: 'pie',
                 radius: ['30%', '70%'],
                 avoidLabelOverlap: true,
@@ -61,58 +66,45 @@
                 },
                 labelLine: {},
                 data: [
-                  {value: 235, name: '灯具'},
-                  {value: 110, name: '灯杆'},
-                  {value: 634, name: '全部'}
-
+                  {value: 10, name: '灯具'},
+                  {value: 15, name: '灯具1'}
                 ]
               }
             ]
           }
         )
       },
-      ddd () {
+      monthNumber () {
         let myChart = this.$echarts.init(document.getElementById('myChart1'))
         // 绘制图表
-        myChart.setOption({
-          color: ['#3398DB'],
-          tooltip: {
-            trigger: 'axis',
-            axisPointer: { // 坐标轴指示器，坐标轴触发有效
-              type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
-            }
-          },
-          grid: {
-            left: '3%',
-            right: '4%',
-            bottom: '3%',
-            containLabel: true
-          },
-          xAxis: [
-            {
+        myChart.setOption(
+          {
+            tooltip: {
+              trigger: 'item',
+              formatter: '{a} <br/>{c} {b}月'
+            },
+            title: {
+              text: '设备损坏总数',
+              // subtext: '纯属虚构',
+              x: 'center'
+            },
+            xAxis: {
               type: 'category',
-              data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-              axisTick: {
-                alignWithLabel: true
-              }
-            }
-          ],
-          yAxis: [
-            {
+              boundaryGap: false,
+              data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
+            },
+            yAxis: {
               type: 'value'
-            }
-          ],
-          series: [
-            {
-              name: '直接访问',
-              type: 'bar',
-              barWidth: '60%',
-              data: [10, 52, 200, 334, 390, 330, 220]
-            }
-          ]
-        })
+            },
+            series: [{
+              name: '损坏总数',
+              data: [820, 932, 901, 934, 1290, 1330, 1320, 125, 1561, 548, 456, 548],
+              type: 'line',
+              areaStyle: {}
+            }]
+          }
+        )
       }
     }
-
   }
 </script>

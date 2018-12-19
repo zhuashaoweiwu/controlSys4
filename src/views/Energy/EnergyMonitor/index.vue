@@ -11,22 +11,22 @@
     <div class="cont-inpts">
       <el-form ref="searchForm" :model="form" :rules="rules" label-width="80px">
         <el-row type="flex" class="row-bg">
-          <el-col :span="6">
+          <el-col :span="5">
             <el-form-item label="控制柜" prop="eleboxId">
               <el-input v-model="form.eleboxId"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="16">
+          <el-col :span="12">
             <el-form-item label="日期从" prop="date1">
-              <el-col :span="11">
+              <el-col :span="9">
                 <el-date-picker type="date" placeholder="选择日期" v-model="form.date1"
                   format="yyyy 年 MM 月 dd 日"
                   value-format="yyyy-MM-dd"
                   style="width: 100%;">
                 </el-date-picker>
               </el-col>
-              <el-col class="line" :span="2">到</el-col>
-              <el-col :span="11">
+              <el-col class="line" :span="1">到</el-col>
+              <el-col :span="9">
                 <el-date-picker type="date" placeholder="选择日期" v-model="form.date2"
                   format="yyyy 年 MM 月 dd 日"
                   value-format="yyyy-MM-dd"
