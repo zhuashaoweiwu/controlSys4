@@ -12,26 +12,21 @@
         </el-form-item>
       </el-form>
       <div class="rightList">
-        <template>
-          <el-select v-model="value" placeholder="选择项目">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </template>
-        <div class="button">导出</div>
-        <div class="button">打印</div>
+        <div class="button" @click="exportDeviceOperation">导出设备运维状况</div>
       </div>
     </div>
     <div style="clear:both"></div>
-
     <div class="viewsTab">
       <div>
-        <div class="objName">项目</div>
-        <GeneralChart></GeneralChart>
+        <el-row :gutter="20">
+          <GeneralChart :pie-data="pieData"></GeneralChart>
+          <!--<GeneralChartLine :line-data="lineData"></GeneralChartLine>-->
+          <el-col :span="16">
+            <div class="grid-content bg-purple">
+              <div ref="myChart_" :style="{width: '800px', height: '400px'}"></div>
+            </div>
+          </el-col>
+        </el-row>
       </div>
     </div>
   </div>
@@ -40,7 +35,7 @@
   import GeneralChart from './generalChart.vue'
   import moment from 'moment'
 
-  import {listDeviceRepaireStatistic, listDeviceDamageCountByMonth} from '@/api/AssetAdmin.js'
+  import {listDeviceRepaireStatistic, listDeviceDamageCountByMonth, exportDeviceOperation} from '@/api/AssetAdmin.js'
 
   export default {
     data () {
@@ -57,29 +52,58 @@
         monthEnd: '',
         yearStart: '',
         yearEnd: '',
-        options: [{
-          value: '选项1',
-          label: '项目1'
-        }, {
-          value: '选项2',
-          label: '项目2'
-        }, {
-          value: '选项3',
-          label: '项目3'
-        }, {
-          value: '选项4',
-          label: '项目4'
-        }, {
-          value: '选项5',
-          label: '项目5'
-        }],
-        value: ''
+        pieData: [],
+        lineData: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        value: '',
+        areaOptions: {
+          tooltip: {
+            trigger: 'item',
+            formatter: '{a} <br/>{c} {b}月'
+          },
+          title: {
+            text: '设备损坏总数',
+            // subtext: '纯属虚构',
+            x: 'center'
+          },
+          xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
+          },
+          yAxis: {
+            type: 'value'
+          },
+          series: [{
+            name: '损坏总数',
+            data: [],
+            type: 'line',
+            areaStyle: {}
+          }]
+        }
       }
     },
     methods: {
+      exportDeviceOperation () {
+        let params = {
+          startDate: this.timeStart.toString(),
+          endDate: this.timeEnd.toString()
+        }
+        exportDeviceOperation(params)
+      },
+      monthNumber () {
+        let myChart1 = this.$echarts.init(this.$refs.myChart_)
+        // 绘制图表
+        myChart1.clear()
+        myChart1.setOption(this.areaOptions, true)
+      },
       listDeviceDamageCountByMonth () {
         listDeviceDamageCountByMonth(this.yearStart.toString(), moment().toString()).then(res => {
-          console.log(res)
+          res.data.forEach(d => {
+            let index_ = moment(d.month).month()
+            this.lineData[index_] = d.monthCount
+          })
+          this.areaOptions.series[0].data = this.lineData
+          this.monthNumber()
         })
       },
       getListDeviceRepaireStatistic () {
@@ -100,10 +124,10 @@
             break
         }
         listDeviceRepaireStatistic(this.timeStart.toString(), this.timeEnd.toString()).then(res => {
-          console.log(res)
-          // for (var i = 0; i < res.data.length; i++) {
-          //   console.log(res.data[i].listDeviceRepairStatisticCount)
-          // }
+          this.pieData = []
+          res.data.forEach((d) => {
+            this.pieData.push({value: d.listDeviceRepairStatisticCount, name: d.myCatalogName})
+          })
         })
       },
       getDate () {
@@ -120,8 +144,6 @@
         let endMonthDays = moment(currentYear + '-' + endMonth).daysInMonth() // 末尾月天数
         let endDays = currentYear + '-' + endMonth + '-' + endMonthDays + ' 23:59:59' // 完整年月日整合
         this.quarterEnd = moment(endDays).toDate() // 计算结果
-        console.log(this.quarterEnd)
-        console.log(this.quarterStart)
         this.monthStart = moment().startOf('month').toDate()
         this.monthEnd = moment().endOf('month').endOf('month').toDate()
         this.yearStart = moment(currentYear + '-01-01').toDate()
@@ -131,6 +153,9 @@
     created () {
       this.getDate()
       this.getListDeviceRepaireStatistic()
+      // this.listDeviceDamageCountByMonth()
+    },
+    mounted () {
       this.listDeviceDamageCountByMonth()
     },
     components: {
@@ -147,34 +172,6 @@
 
   .seach_lest {
     margin-top: 20px;
-  }
-
-  .objack_tab {
-    display: flex;
-    float: left;
-    font-size: 14px;
-  }
-
-  .objack_tab > div {
-    padding: 10px 20px;
-    border: solid 1px #bbb;
-    background: #fff;
-  }
-
-  .objack_tab > div:nth-child(1) {
-    border-right: none;
-    border-radius: 5px 0 0 5px;
-  }
-
-  .objack_tab > div:nth-child(2) {
-    // border-right: none;
-    border-radius: 0px 5px 5px 0px;
-  }
-
-  .objack_tab .active_objack {
-    border: solid 1px #409EFF;
-    color: #409EFF;
-    background: #eee;
   }
 
   .dateChange {
@@ -203,15 +200,6 @@
 
   .rightList div:nth-child(2) {
     margin-left: 20px;
-  }
-
-  .objName {
-    margin-top: 30px;
-    width: 100%;
-  }
-
-  .allobj {
-    margin-top: 20px;
   }
 
   .demonstration {

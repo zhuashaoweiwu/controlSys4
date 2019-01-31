@@ -12,7 +12,7 @@
     <div class="system-center">
       <div class="operation-bar">
         <el-button @click="addBlock()" type="primary">增加区域</el-button>
-        <el-button @click="deleteRow(2)">删除</el-button>
+        <el-button @click="deleteRow(2)">批量删除</el-button>
       </div>
       <div class="data-list">
         <el-table
@@ -89,16 +89,26 @@
     <el-dialog :title="TITLE+'区域'"
                :visible.sync="addDialog" :close-on-click-modal='false' :close-on-press-escape='false' center
                :before-close="handleCloseDialog">
-      <el-form ref="addEditForm" :model="newObject" :rules="addNewObjectRules" label-width="100px">
+      <el-form ref="addEditForm" :model="addArea" :rules="addaddAreaRules" label-width="100px">
         <el-form-item label="区域名称" required prop="areaName">
-          <el-input class="width350" v-model="newObject.areaName"></el-input>
+          <el-input class="width350" v-model="addArea.areaName"></el-input>
+        </el-form-item>
+        <el-form-item label="父区域选择" required prop="areaName">
+          <el-select v-model="addArea.nnlightctlParentRegion" placeholder="请选择">
+            <el-option
+              v-for="item in List"
+              :key="item.id"
+              :label="item.areaName"
+              :value="item.id">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="备注">
           <el-input
             type="textarea"
             :autosize="{ minRows: 2, maxRows: 4}"
             placeholder="请输入内容"
-            v-model="newObject.regionDesc">
+            v-model="addArea.regionDesc">
           </el-input>
         </el-form-item>
       </el-form>
@@ -110,7 +120,7 @@
   </div>
 </template>
 <script>
-  import {listArea, deleteArea, addOrUpdateArea} from '@/api/RoadLighting/deploy'
+  import {listArea, deleteArea, addOrUpdateArea, getLevelArea} from '@/api/RoadLighting/deploy'
   import '../../../utils/filter.js'
 
   export default {
@@ -126,9 +136,9 @@
         TITLE: null,
         List: [],
         addOrUpdateStatus: null,
-        newObject: {},
+        addArea: {},
         addDialog: false,
-        addNewObjectRules: {
+        addaddAreaRules: {
           areaName: [
             {required: true, message: '填写内容不得为空', trigger: 'blur'}
           ]
@@ -181,6 +191,7 @@
               message: '请勾选需要删除的数据',
               type: 'warning'
             })
+            return
           }
         }
         this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -208,7 +219,7 @@
       editRow (e) {
         this.TITLE = '修改'
         this.addOrUpdateStatus = 'edit'
-        this.newObject = Object.assign({}, this.List[e])
+        this.addArea = Object.assign({}, this.List[e])
         this.addDialog = true
       },
       onSubmit () {
@@ -220,7 +231,7 @@
             } else {
               _text = '修改成功'
             }
-            addOrUpdateArea(this.newObject).then(response => {
+            addOrUpdateArea(this.addArea).then(response => {
               this.$message({
                 type: 'success',
                 message: _text
@@ -238,7 +249,7 @@
       },
       // 弹窗关闭时将数据清空
       handleCloseDialog (done) {
-        this.newObject = {}
+        this.addArea = {}
         this.$refs['addEditForm'].resetFields()
         done()
       }

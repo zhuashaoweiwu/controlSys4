@@ -27,7 +27,7 @@ export const constantRouterMap = [
     children: [{
       path: 'project',
       component: () => import('@/views/GisService/Project/index'),
-      name: 'Project',
+      name: 'GisProject',
       meta: {title: '项目地理信息', icon: ''}
     },
       {
@@ -94,13 +94,13 @@ export const constantRouterMap = [
         component: () => import('@/views/EventWarning/WarningSetting/index'),
         name: 'Warningseting',
         meta: {title: '设置', icon: ''}
-      },
-      {
-        path: 'synwarning',
-        component: () => import('@/views/EventWarning/SynWarning/index'),
-        name: 'Synwarning',
-        meta: {title: '同步', icon: ''}
       }]
+      // {
+      //   path: 'synwarning',
+      //   component: () => import('@/views/EventWarning/SynWarning/index'),
+      //   name: 'Synwarning',
+      //   meta: {title: '同步', icon: ''}
+      // }
   },
   // 道路照明系统
   {
@@ -227,17 +227,10 @@ export const constantRouterMap = [
         meta: {title: '终端报表', icon: ''}
       },
       {
-        path: 'history',
-        component: () => import('@/views/Energy/History/index'),
-        name: 'History',
-        meta: {title: '历史', icon: ''}
-      },
-      {
-        path: 'lamp',
-        // hidden: true,
-        component: () => import('@/views/GisService/Lamp/index'),
-        name: 'Lamp',
-        meta: {title: '灯具地理信息', icon: ''}
+        path: 'log',
+        component: () => import('@/views/Energy/Log/index'),
+        name: 'Log',
+        meta: {title: '信号日志', icon: ''}
       }]
   },
   // 用户管理
@@ -344,8 +337,7 @@ export const constantRouterMap = [
       {
         path: '/inventory/user',
         component: () => import('@/views/Ucenter/index'),
-        name: 'User',
-
+        name: 'AssetUser',
         meta: {title: '库存管理', icon: ''},
         children: [
           {
@@ -380,7 +372,8 @@ export const constantRouterMap = [
 
     ]
   },
-  {     // 工单管理
+  // 工单管理
+  {
     path: '/workorder',
     component: Layout,
     name: 'work',

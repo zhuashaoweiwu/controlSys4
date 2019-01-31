@@ -1,11 +1,5 @@
-/*
- * @Author: Ouber23
- * @Date: 2018-07-31 00:25:46
- * @LastEditors: Ouber23
- * @LastEditTime: 2018-07-31 00:27:14
- * @Description:
- */
 import request from '@/utils/request'
+
 /**
  * 1、获取常规能耗统计数据
  * @export
@@ -31,7 +25,7 @@ export function getCommonEnergyStatistic () {
 export function listEnergyStatisticByDay (month) {
   return request({
     url: '/api/energyStatistic/listEnergyStatisticByDay',
-    method: 'POST',
+    method: 'post',
     data: {
       month: month
     }
@@ -45,11 +39,11 @@ export function listEnergyStatisticByDay (month) {
  *
  * @returns
  */
-export function listEleboxPower (params) {
+export function listEleboxPower (obj) {
   return request({
     url: '/api/energyStatistic/listEleboxPower',
-    method: 'get',
-    params: params
+    method: 'post',
+    data: obj
   })
 }
 
@@ -60,26 +54,26 @@ export function listEleboxPower (params) {
  *
  * @returns
  */
-export function listEleboxElectric (params) {
+export function listEleboxElectric (obj) {
   return request({
     url: '/api/energyStatistic/listEleboxElectric',
-    method: 'get',
-    params: params
+    method: 'post',
+    data: obj
   })
 }
 
 /**
- * 5、通过控制柜id获取某段时间范围内的电流
+ * 5、通过控制柜id获取某段时间范围内的电压
  * @export
  * @param {*}
  *
  * @returns
  */
-export function listEleboxVoltage (params) {
+export function listEleboxVoltage (obj) {
   return request({
     url: '/api/energyStatistic/listEleboxVoltage',
-    method: 'get',
-    params: params
+    method: 'post',
+    data: obj
   })
 }
 
@@ -94,8 +88,8 @@ export function listEleboxVoltage (params) {
 export function listEleboxEnergyStatistic (startDate, endDate, pageNumber, pageSize) {
   return request({
     url: '/api/energyStatistic/listEleboxEnergyStatistic',
-    method: 'get',
-    params: {
+    method: 'post',
+    data: {
       pageNumber: pageNumber,
       pageSize: pageSize,
       startDate: startDate,
@@ -113,16 +107,11 @@ export function listEleboxEnergyStatistic (startDate, endDate, pageNumber, pageS
  *
  * @returns
  */
-export function getEleboxEnergyStatistic (pageNumber, pageSize, startDate, endDate) {
+export function getEleboxEnergyStatistic (obj) {
   return request({
     url: '/api/energyStatistic/getEleboxEnergyStatistic',
-    method: 'get',
-    params: {
-      pageNumber: pageNumber,
-      pageSize: pageSize,
-      startDate: startDate,
-      endDate: endDate
-    }
+    method: 'post',
+    data: obj
   })
 }
 
@@ -136,8 +125,8 @@ export function getEleboxEnergyStatistic (pageNumber, pageSize, startDate, endDa
 export function listLightAvgVoltage (lightIds, startDate, endDate) {
   return request({
     url: '/api/energyStatistic/listLightAvgVoltage',
-    method: 'get',
-    params: {
+    method: 'post',
+    data: {
       lightIds: lightIds,
       startDate: startDate,
       endDate: endDate
@@ -155,8 +144,8 @@ export function listLightAvgVoltage (lightIds, startDate, endDate) {
 export function listLightAvgElectric (lightIds, startDate, endDate) {
   return request({
     url: '/api/energyStatistic/listLightAvgElectric',
-    method: 'get',
-    params: {
+    method: 'post',
+    data: {
       lightIds: lightIds,
       startDate: startDate,
       endDate: endDate
@@ -174,11 +163,45 @@ export function listLightAvgElectric (lightIds, startDate, endDate) {
 export function listLightAvgPower (lightIds, startDate, endDate) {
   return request({
     url: '/api/energyStatistic/listLightAvgPower',
-    method: 'get',
-    params: {
+    method: 'post',
+    data: {
       lightIds: lightIds,
       startDate: startDate,
       endDate: endDate
     }
+  })
+}
+
+/**
+ * 11、根据灯具唯一编码统计单个灯具的电压、能耗信息
+ * @export
+ * @param {*}
+ *
+ * @returns
+ */
+export function statisticLightEnergy (lightingCode, startDate, endDate) {
+  return request({
+    url: '/api/energyStatistic/statisticLightEnergy',
+    method: 'post',
+    data: {
+      lightingCode: lightingCode,
+      startDate: startDate,
+      endDate: endDate
+    }
+  })
+}
+
+/**
+ * 12、通过uuid和时间搜索终端信息日志
+ * @export
+ * @param {*}
+ *
+ * @returns
+ */
+export function listLightSignalLog (obj) {
+  return request({
+    url: '/api/energyStatistic/listLightSignalLog',
+    method: 'post',
+    data: obj
   })
 }

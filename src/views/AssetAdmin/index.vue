@@ -15,24 +15,25 @@
   </div>
 </template>
 <script>
-export default {
-  name: 'AssetAdminIndex',
-  methods: {
-    linkModule: function (url) {
-      console.log(url)
-      if (url) this.$router.push(url)
+  export default {
+    name: 'AssetAdminIndex',
+    methods: {
+      linkModule: function (url) {
+        if (url) this.$router.push(url)
+      }
     }
   }
-}
 </script>
 <style lang="scss" scoped>
-  .container{
+  .container {
     padding: 110px 100px;
     display: flex;
-    .item{
+
+    .item {
       width: 25%;
       padding: 0 10px;
-      img{
+
+      img {
         width: 100%
       }
     }

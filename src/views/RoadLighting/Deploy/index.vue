@@ -18,16 +18,16 @@
         <div class="system-center">
           <div class="operation-bar">
             <el-button icon='el-icon-plus' @click="addCabinet()" type="primary">增加</el-button>
-            <!--<el-upload-->
-            <!--class="upload-demo"-->
-            <!--:show-file-list='false'-->
-            <!--action="http://47.105.38.215:8080/nnlightctl/api/roadlighting/importElebox"-->
-            <!--:on-success="uploadElBoxSuccess"-->
-            <!--:on-error="uploadElBoxError"-->
-            <!--name="batchEleboxFile">-->
-            <!--<el-button icon='el-icon-upload2'>导入</el-button>-->
-            <!--</el-upload>-->
-            <!--<el-button icon='el-icon-download' @click="downloadEleBox">导出</el-button>-->
+            <el-upload
+              class="upload-demo"
+              :show-file-list='false'
+              action="http://103.48.232.124:8080/nnlightctl/api/roadlighting/importElebox"
+              :on-success="uploadElBoxSuccess"
+              :on-error="uploadElBoxError"
+              name="batchEleboxFile">
+              <el-button icon='el-icon-upload2'>导入</el-button>
+            </el-upload>
+            <el-button icon='el-icon-download' @click="downloadEleBox">导出</el-button>
             <el-dropdown trigger="click" placement='bottom-start' @command="handleElboxEdit">
               <el-button icon='el-icon-edit'>批量设置</el-button>
               <el-dropdown-menu slot="dropdown">
@@ -70,12 +70,12 @@
                     size="small">
                     管理灯具
                   </el-button>
-                  <el-button
-                    type="text"
-                    @click.native.prevent="loopSplitFun(scope.row.id)"
-                    size="small">
-                    回路拆分
-                  </el-button>
+                  <!--<el-button-->
+                  <!--type="text"-->
+                  <!--@click.native.prevent="loopSplitFun(scope.row.id)"-->
+                  <!--size="small">-->
+                  <!--回路拆分-->
+                  <!--</el-button>-->
                   <el-button
                     @click.native.prevent="editCabinet(scope.$index)"
                     type="text"
@@ -125,16 +125,16 @@
           <div class="operation-bar">
             <el-button icon='el-icon-plus' @click="addLamp()" type="primary">增加</el-button>
             <el-button icon='el-icon-plus' @click="addLampAll()" type="primary">批量增加</el-button>
-            <!--<el-upload-->
-              <!--class="upload-demo"-->
-              <!--:show-file-list='false'-->
-              <!--action="http://47.105.38.215:8080/nnlightctl/api/roadlighting/importLighting"-->
-              <!--:on-success="uploadLightSuccess"-->
-              <!--:on-error="uploadLightError"-->
-              <!--name="batchImportLightingFile">-->
-              <!--<el-button icon='el-icon-upload2'>导入</el-button>-->
-            <!--</el-upload>-->
-            <!--<el-button icon='el-icon-download' @click="downloadLight">导出</el-button>-->
+            <el-upload
+              class="upload-demo"
+              :show-file-list='false'
+              :action="$config.baseUrl+'/api/roadlighting/importLighting'"
+              :on-success="uploadLightSuccess"
+              :on-error="uploadLightError"
+              name="batchImportLightingFile">
+              <el-button icon='el-icon-upload2'>导入</el-button>
+            </el-upload>
+            <el-button icon='el-icon-download' @click="downloadLight">导出</el-button>
             <el-dropdown trigger="click" placement='bottom-start' @command="handleLightEdit">
               <el-button icon='el-icon-edit'>批量设置</el-button>
               <el-dropdown-menu slot="dropdown">
@@ -155,7 +155,7 @@
               header-row-class-name="datalist-header"
               @selection-change="handleSelectionChangeLight">
               <el-table-column fixed type="selection" width="40"></el-table-column>
-              <el-table-column fixed prop="id" label="UID" width="100"></el-table-column>
+              <el-table-column fixed prop="uid" label="UID" width="200"></el-table-column>
               <el-table-column prop="lightingCode" label="唯一编码" width="120"></el-table-column>
               <el-table-column label="使用日期" width="140">
                 <template slot-scope="scope">
@@ -167,19 +167,17 @@
               <el-table-column prop="decay" label="光衰" width="100"></el-table-column>
               <el-table-column prop="maxUseTime" label="最大使用时间（年）" width="160"></el-table-column>
               <el-table-column prop="mem" label="备注"></el-table-column>
-              <!-- <el-table-column prop="provinceName" label="灯具GIS信息" width="140"></el-table-column>
-              <el-table-column prop="countryName" label="资产编号" width="100"></el-table-column> -->
               <el-table-column fixed="right" label="操作" width="120">
                 <template slot-scope="scope">
                   <el-button
-                    @click.native.prevent="editLightRow(scope.$index)"
+                    @click.native.prevent="editLightRow(scope.row.id)"
                     type="text"
                     size="small">
                     编辑
                   </el-button>
                   <el-button
                     class="danger-text-btn"
-                    @click.native.prevent="deleteLightRow(1, scope.$index)"
+                    @click.native.prevent="deleteLightRow(1, scope.row.id)"
                     type="text"
                     size="small">
                     删除
@@ -204,12 +202,12 @@
       </el-tab-pane>
     </el-tabs>
     <!-- 新增控制柜 -->
-    <el-dialog title="新增控制柜" width="590px"
+    <el-dialog title="新增控制柜" width="800px"
                :visible.sync="cabinetDialog" :close-on-click-modal='false' :close-on-press-escape='false' center
                :before-close="handleCloseAddNewElbox">
       <el-form ref="elboxCountForm" label-width="100px">
         <el-form-item label="控制柜数量">
-          <el-input v-model="ElboxCount" style="width:70px"></el-input>
+          <el-input-number v-model="ElboxCount" :min="1" :max="10" size="small"></el-input-number>
         </el-form-item>
       </el-form>
       <div class="cabinet-list">
@@ -223,11 +221,11 @@
           tooltip-effect="dark"
           style="width: 100%"
           header-row-class-name="datalist-header">
-          <el-table-column fixed prop="uid" label="唯一编码" width="100"></el-table-column>
-          <el-table-column prop="modelName" label="名称" width="140"></el-table-column>
-          <el-table-column prop="powerRating" label="额定功率" width="80"></el-table-column>
-          <el-table-column prop="electricRating" label="额定电流" width="80"></el-table-column>
-          <el-table-column prop="voltageRating" label="额定电压" width="80"></el-table-column>
+          <el-table-column fixed prop="modelCode" label="唯一编码" width="120"></el-table-column>
+          <el-table-column prop="modelName" label="名称" width="110"></el-table-column>
+          <el-table-column prop="powerRating" label="额定功率" width="100"></el-table-column>
+          <el-table-column prop="electricRating" label="额定电流" width="100"></el-table-column>
+          <el-table-column prop="voltageRating" label="额定电压" width="100"></el-table-column>
           <el-table-column fixed="right" label="操作" width="100">
             <template slot-scope="scope">
               <el-button
@@ -257,7 +255,7 @@
                :visible.sync="deviceAddDialog" center>
       <el-form ref="form" label-width="100px">
         <el-form-item label="设备数量">
-          <el-input v-model="EleboxModelCount" style="width:70px" :disabled="disabled"></el-input>
+          <el-input-number v-model="EleboxModelCount" :min="1" :max="10" size="small"></el-input-number>
         </el-form-item>
       </el-form>
       <div class="add-device clearfix">
@@ -267,19 +265,11 @@
             <el-form-item label="模块名称" required prop="modelName">
               <el-input v-model="newEleboxModel.modelName"></el-input>
             </el-form-item>
-            <!--<el-form-item label="类型" required>-->
-            <!--<el-input value="模块"></el-input>-->
-            <!--&lt;!&ndash; <el-select style="width: 100%">-->
-            <!--<el-option-->
-            <!--v-for="(item , index) in cityList"-->
-            <!--:key="index"-->
-            <!--:label="item.cityName"-->
-            <!--:value="item.id">-->
-            <!--</el-option>-->
-            <!--</el-select> &ndash;&gt;-->
-            <!--</el-form-item>-->
-            <el-form-item label="模块ID" required prop="uid">
+            <el-form-item label="模块UID" required prop="uid">
               <el-input v-model="newEleboxModel.uid"></el-input>
+            </el-form-item>
+            <el-form-item label="唯一编码" required prop="uid">
+              <el-input v-model="newEleboxModel.modelCode"></el-input>
             </el-form-item>
             <el-form-item label="额定功率" required prop="powerRating">
               <el-input v-model="newEleboxModel.powerRating"></el-input>
@@ -364,11 +354,13 @@
           <el-input v-model="newModelLoop.electricity"></el-input>
         </el-form-item>
         <el-form-item label="回路灯具数量" required prop="lightCount">
-          <el-input v-model="newModelLoop.lightCount"></el-input>
+          <el-input-number v-model="newModelLoop.lightCount" :min="1" :max="100" size="small"></el-input-number>
         </el-form-item>
-        <!-- <el-form-item label="回路状态" required prop="state">
-          <el-input v-model="newModelLoop.state"></el-input>
-        </el-form-item> -->
+        <el-form-item label="回路状态" required prop="state">
+          <el-select v-model="newModelLoop.state">
+            <el-option v-for="s in modelLoopState" :label="s.label" :value="s.value" :key="s.value"></el-option>
+          </el-select>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="addLoopDialog = false">取 消</el-button>
@@ -382,7 +374,7 @@
       <div class="uid-dgh-item clearfix">
         <div class="item-block f-l" style="width:220px">
           <span class="title">灯具UID</span>
-          <el-input style="width:120px" v-model="MoreLampObj.uid" placeholder="请输入"></el-input>
+          <el-input style="width:120px" v-model="MoreLampObj.lightingCode" placeholder="请输入"></el-input>
         </div>
         <div class="item-block f-l">
           <span class="title">数量</span>
@@ -393,17 +385,6 @@
           <el-input v-model="MoreLampObj.num" placeholder="请输入"></el-input>
         </div>
       </div>
-      <!-- <div class="uid-dgh-item">
-        <div class="item-block f-l">
-          <span class="title">灯杆号</span><el-input  placeholder="请输入"></el-input>
-        </div>
-        <div class="item-block f-l">
-          <span class="title">批量数量</span><el-input  placeholder="请输入"></el-input>
-        </div>
-        <div class="item-block f-l">
-          <span class="title">每次递增</span><el-input  placeholder="请输入"></el-input>
-        </div>
-      </div> -->
       <el-form ref="addNewMoreLightForm" class="lamp-form" :model="newMoreLight" :rules="addNewLightRules"
                label-width="140px" size='small'>
         <el-form-item label="生产日期" required prop="manufacture">
@@ -443,17 +424,7 @@
             <el-option
               v-for="item in listLightModel"
               :key="item.id"
-              :label="item.mem"
-              :value="item.id">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="灯具GIS信息" required prop="nnlightctlLightingGisId">
-          <el-select class="input-wrap" v-model="newMoreLight.nnlightctlLightingGisId" placeholder="请选择">
-            <el-option
-              v-for="item in gisAllList"
-              :key="item.id"
-              :label="item.mem"
+              :label="item.modelName"
               :value="item.id">
             </el-option>
           </el-select>
@@ -474,8 +445,7 @@
             type="textarea"
             v-model="newMoreLight.mem"
             :autosize="{ minRows: 2, maxRows: 4}"
-            placeholder="请输入内容"
-          >
+            placeholder="请输入内容">
           </el-input>
         </el-form-item>
       </el-form>
@@ -490,8 +460,11 @@
                :before-close="handleCloseAddNewLight">
       <el-form ref="addNewLightForm" class="lamp-form" :model="newLight" :rules="addNewLightRules" label-width="140px"
                size='small'>
-        <el-form-item label="灯具编码" required prop="uid">
+        <el-form-item label="灯具UID" required prop="uid">
           <el-input v-model="newLight.uid" class="input-wrap"></el-input>
+        </el-form-item>
+        <el-form-item label="灯具编码" required prop="lightingCode">
+          <el-input v-model="newLight.lightingCode" class="input-wrap"></el-input>
         </el-form-item>
         <el-form-item label="所属项目" required prop="nnlightctlProjectId">
           <el-select class="input-wrap" v-model="newLight.nnlightctlProjectId">
@@ -530,17 +503,7 @@
             <el-option
               v-for="item in listLightModel"
               :key="item.id"
-              :label="item.mem"
-              :value="item.id">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="灯具GIS信息" required prop="nnlightctlLightingGisId">
-          <el-select class="input-wrap" v-model="newLight.nnlightctlLightingGisId" placeholder="请选择">
-            <el-option
-              v-for="item in gisAllList"
-              :key="item.id"
-              :label="item.mem"
+              :label="item.modelName"
               :value="item.id">
             </el-option>
           </el-select>
@@ -582,34 +545,34 @@
         </div>
         <el-table
           ref="multipleTable"
-          :data="eleboxList2"
+          :data="lightBelongElebox"
           tooltip-effect="dark"
           style="width: 100%"
           header-row-class-name="datalist-header"
           @selection-change="handleSelectionChangeLight">
           <el-table-column fixed type="selection" width="40"></el-table-column>
-          <el-table-column fixed prop="uid" label="UID" width="100"></el-table-column>
+          <el-table-column fixed prop="uid" label="UID" width="200"></el-table-column>
           <el-table-column label="使用日期" width="140">
             <template slot-scope="scope">
               {{scope.row.gmtCreated|timeFormat}}
             </template>
           </el-table-column>
-          <el-table-column prop="lamphead" label="灯头号" width="100"></el-table-column>
-          <el-table-column prop="lamppost" label="灯杆" width="100"></el-table-column>
+          <el-table-column prop="lamphead" label="灯头号" width="120"></el-table-column>
+          <el-table-column prop="lamppost" label="灯杆" width="120"></el-table-column>
           <el-table-column prop="decay" label="光衰" width="100"></el-table-column>
           <el-table-column prop="maxUseTime" label="最大使用时间（年）" width="160"></el-table-column>
           <el-table-column prop="mem" label="备注"></el-table-column>
           <el-table-column fixed="right" label="操作" width="120">
             <template slot-scope="scope">
               <el-button
-                @click.native.prevent="editLightRow(scope.$index)"
+                @click.native.prevent="editLightRow(scope.row.id)"
                 type="text"
                 size="small">
                 编辑
               </el-button>
               <el-button
                 class="danger-text-btn"
-                @click.native.prevent="unbindLightBeElebox(1, scope.$index)"
+                @click.native.prevent="unbindLightBeElebox(1, scope.row.id)"
                 type="text"
                 size="small">
                 删除
@@ -647,7 +610,7 @@
             <el-upload
               class="upload-demo"
               :show-file-list='false'
-              action="http://47.105.38.215:8080/nnlightctl/api/roadlighting/importLighting"
+              action="http://103.48.232.124:8080/nnlightctl/api/roadlighting/importLighting"
               :on-success="uploadLightSuccess"
               :on-error="uploadLightError"
               name="batchImportLightingFile">
@@ -658,16 +621,14 @@
             ref="lightTableOfLoof"
             :data="nobeIDlist"
             tooltip-effect="dark"
-            height="300"
+            height="370"
             style="width: 100%"
             header-row-class-name="datalist-header"
             @selection-change="handleSelectionChangeLight">
             <el-table-column type="selection" width="30"></el-table-column>
-            <el-table-column fixed prop="uid" label="UID" width="60"></el-table-column>
-            <!-- <el-table-column fixed prop="loopPriority" label="序号" width="60"></el-table-column> -->
-            <el-table-column prop="lamphead" label="灯头号" width="100"></el-table-column>
-            <el-table-column prop="lamppost" label="灯杆" width="100"></el-table-column>
-            <el-table-column prop="decay" label="光衰" width="100"></el-table-column>
+            <el-table-column prop="lamphead" label="灯头号" width="120"></el-table-column>
+            <el-table-column prop="lamppost" label="灯杆" width="120"></el-table-column>
+            <el-table-column prop="decay" label="光衰" width="80"></el-table-column>
             <el-table-column prop="mem" label="备注"></el-table-column>
             <!-- <el-table-column fixed="right" label="操作" width="60">
               <template slot-scope="scope">
@@ -687,18 +648,6 @@
               </template>
             </el-table-column> -->
           </el-table>
-          <!-- <div class="pagelist-block">
-            <el-pagination
-              @size-change="handleSizeChangeLight"
-              background
-              @current-change="handleCurrentChangeLight"
-              :current-page="lightCurrentPage"
-              :page-sizes="[10, 20, 50, 100]"
-              :page-size="lightPageSize"
-              layout="total, sizes, prev, pager, next, jumper"
-              :total="allLightTotal">
-            </el-pagination>
-          </div> -->
         </div>
         <div class="controll-wrap">
           <div class="controll-btn" @click="goLeftLoop">
@@ -711,14 +660,11 @@
         <div class="select-wrap">
           <p class="p-title">已选择</p>
           <p class="p-title-add">添加到：</p>
-          <!-- <div class="operate-block clearfix">
-            <a class="f-l"><i class="iconfont">&#xe632;</i>删除</a>
-          </div> -->
           <el-form :inline="true" class="demo-form-inline">
             <el-form-item required label="模块">
               <el-select v-model="selectEleboxModelId2" @change="changeMokuai($event)" placeholder="模块">
                 <el-option
-                  v-for="item in listEleboxModel22"
+                  v-for="item in currentEleboxModel"
                   :key="item.id"
                   :label="item.modelName"
                   :value="item.id">
@@ -741,17 +687,16 @@
             ref="multipleTable"
             :data="thisLoopList1"
             tooltip-effect="dark"
-            height="270"
+            height="320"
             style="width: 100%"
             header-row-class-name="datalist-header"
             @selection-change="handleSelectionThisLoopList">
             <el-table-column type="selection" width="30"></el-table-column>
-            <el-table-column fixed prop="uid" label="UID" width="60"></el-table-column>
             <el-table-column prop="lamphead" label="灯头号" width="100"></el-table-column>
             <el-table-column prop="lamppost" label="灯杆" width="100"></el-table-column>
-            <el-table-column prop="decay" label="光衰" width="100"></el-table-column>
+            <el-table-column prop="decay" label="光衰" width="80"></el-table-column>
             <el-table-column prop="mem" label="备注"></el-table-column>
-            <el-table-column fixed label="序号" width="130">
+            <el-table-column fixed label="序号" width="100">
               <template slot-scope="scope">
                 <el-select v-model="scope.row.loopPriority" @change="loopdatachange(scope.row,scope.$index)"
                            placeholder="请选择">
@@ -883,26 +828,23 @@
     <!-- 设置区域 -->
     <el-dialog title="提示"
                :visible.sync="showAeraDialog"
-               width="560px"
+               width="360px"
                center>
-      <span>请选择所在区域</span>
+      <h4 class="select-area-title">请选择所在区域</h4>
       <div class="area-dialog-content">
-        <el-input
-          placeholder="输入关键字进行搜索"
-          v-model="filterText">
-        </el-input>
-        <el-tree
-          class="area-tree"
-          :data="data2"
-          :props="defaultProps"
-          default-expand-all
-          :filter-node-method="filterNode"
-          ref="tree2">
-        </el-tree>
+        <el-select v-model="selectAreaId" placeholder="请选择">
+          <el-option
+            v-for="item in allAreaList"
+            :key="item.id"
+            :label="item.label"
+            :value="item.id">
+          </el-option>
+        </el-select>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="showAeraDialog = false">取 消</el-button>
-        <el-button type="primary" @click="showAeraDialog = false">确 定</el-button>
+        <el-button type="primary" @click="batchSetEleboxArea" v-if="activeName==='cabinet'">确 定</el-button>
+        <el-button type="primary" @click="batchSetLightingArea" v-else>确 定</el-button>
       </span>
     </el-dialog>
     <!-- 设置控制柜型号 -->
@@ -937,10 +879,19 @@
       center>
       <div class="mapicon-dialog">
         <el-upload
-          action="https://jsonplaceholder.typicode.com/posts/"
+          :action="$config.baseUrl+'/api/roadlighting/uploadEleboxGisIcon'"
           class="icon-uploader"
           list-type="picture-card"
-          :limit="1">
+          name="eleboxGisIcon"
+          :limit="1" v-if="activeName==='cabinet'">
+          <i class="el-icon-plus"></i>
+        </el-upload>
+        <el-upload
+          :action="$config.baseUrl+'/api/roadlighting/uploadLightGisIcon'"
+          class="icon-uploader"
+          list-type="picture-card"
+          name="lightGisIcon"
+          :limit="1" v-else>
           <i class="el-icon-plus"></i>
         </el-upload>
         <p>支持jpg/png/gif格式</p>
@@ -987,7 +938,6 @@
         <el-button type="primary" @click="showUserableDialog = false">确 定</el-button>
       </span>
     </el-dialog>
-
     <!-- 回路拆分 -->
     <el-dialog
       title="回路拆分"
@@ -1104,9 +1054,12 @@
     unbindLightBeElebox,
     listProject,
     listLightingData,
-    listElebox2,
-    listEleboxModel2,
-    listModelLoopList
+    listLightingByEleboxId,
+    listEleboxModelByEle,
+    listModelLoopList,
+    getLevelArea,
+    batchSetEleboxArea,
+    batchSetLightingArea
   } from '@/api/RoadLighting/deploy'
   import {listLightModel} from '@/api/RoadLighting/EquipmentType'
   import '../../../utils/filter.js'
@@ -1116,37 +1069,24 @@
     data () {
       return {
         // 12.6 h.wang 修改
+        selectAreaId: '',
         boxId: '',
         boxCode: '',
         lightId: '',
         lightCode: '',
+        modelLoopState: [
+          {value: 0, label: '通电'},
+          {value: 1, label: '断电'},
+          {value: 2, label: '故障'}
+        ],
         // 上
         filterText: '',
-        listEleboxModel22: [],
+        currentEleboxModel: [],
         selectEleboxModelId2: '',
         selectModelLoopId3: '',
         options: [],
         value: '',
-        data2: [{
-          id: 1,
-          label: '杭州',
-          children: [{
-            id: 4,
-            label: 'ABCDG区域'
-          },
-            {
-              id: 4,
-              label: '文一西路'
-            },
-            {
-              id: 4,
-              label: '西湖'
-            },
-            {
-              id: 4,
-              label: '余杭'
-            }]
-        }],
+        allAreaList: [],
         defaultProps: {
           children: 'children',
           label: 'label'
@@ -1173,7 +1113,7 @@
         listLightModel: [], // 所有灯具类型列表
         listArea: [], // 区域列表
         eleboxList: [],
-        eleboxList2: [],
+        lightBelongElebox: [],
         allEleboxList: [], // 所有控制柜列表
         allProjectList: [], // 所有项目
         newElebox: [],
@@ -1182,7 +1122,7 @@
         boxMultipleSelection: [],
         boxCurrentPage: 1,
         allEleboxTotal: 0,
-        ElboxCount: null, // 添加控制柜的控制柜个数
+        ElboxCount: 1, // 添加控制柜的控制柜个数
         // 设备
         deviceList: [], // 设备列表
         EleboxModelCount: null, // 设备个数
@@ -1286,7 +1226,7 @@
         },
         idiid: [],
         addNewLightRules: {
-          uid: [
+          lightingCode: [
             {required: true, message: '填写内容不得为空', trigger: 'blur'}
           ],
           manufacture: [
@@ -1375,11 +1315,14 @@
         this.lightMultipleSelection = []
         this.lightPageNumber = 1
         this.lightPageSize = 10
+        this.boxPageNumber = 1
+        this.boxPageSize = 10
         this.eleboxId = null
         this.notBe = 1
         if (val === 'lighting') {
           this.getListLighting()
         } else {
+          this.getListElebox()
         }
       },
       insertLanmpDialog: function (val, oldVal) {
@@ -1389,18 +1332,18 @@
           this.lightPageSizeBeifen = this.lightPageSize
           this.lightPageNumber = null
           this.lightPageSize = null
-          this.eleboxId = null
+          // this.eleboxId = null
           this.notBe = 1
-          this.getListLighting()
-          this.getListEleboxModel(this.eleboxIdBeifen)
+          // this.getListLighting()
+          // this.getListEleboxModel(this.eleboxIdBeifen)
         } else {
+          this.getListLightingByEleboxId()
           this.selectModelLoopId = null
           this.selectEleboxModelId = null
           this.lightPageNumber = this.lightPageNumberBeifen
           this.lightPageSize = this.lightPageSizeBeifen
-          this.eleboxId = this.eleboxIdBeifen
+          // this.eleboxId = this.eleboxIdBeifen
           this.notBe = 0
-          this.getListLighting()
           this.eleboxIdBeifen = null
           this.lightPageNumberBeifen = null
           this.lightPageSizeBeifen = null
@@ -1419,6 +1362,60 @@
       }
     },
     methods: {
+      batchSetEleboxArea () {
+        let _array = []
+        if (this.boxMultipleSelection.length > 0) {
+          this.boxMultipleSelection.forEach(selectedItem => {
+            // 取出所有待删除选项id
+            _array.push(selectedItem.id)
+          })
+        }
+        batchSetEleboxArea(this.selectAreaId, _array).then(res => {
+          if (res.data) {
+            this.$message({
+              message: '设置成功',
+              type: 'success'
+            })
+            this.showAeraDialog = false
+            this.getListElebox()
+          }
+        })
+      },
+      batchSetLightingArea () {
+        let _array = []
+        if (this.lightMultipleSelection.length > 0) {
+          this.lightMultipleSelection.forEach(selectedItem => {
+            // 取出所有待删除选项id
+            _array.push(selectedItem.id)
+          })
+        }
+        batchSetLightingArea(this.selectAreaId, _array).then(res => {
+          if (res.data) {
+            this.$message({
+              message: '设置成功',
+              type: 'success'
+            })
+            this.showAeraDialog = false
+            this.getListLighting()
+          }
+        })
+      },
+      getLevelArea () {
+        this.allAreaList = []
+        getLevelArea().then(res => {
+          if (res.data.length) {
+            let getArea = arr => {
+              arr.forEach(v => {
+                this.allAreaList.push({label: v.areaName, id: v.id})
+                if (v.subRegionViewList instanceof Array) {
+                  getArea(v.subRegionViewList)
+                }
+              })
+            }
+            getArea(res.data)
+          }
+        })
+      },
       searchBox () {
         this.getListElebox()
       },
@@ -1436,7 +1433,6 @@
         this.lightMultipleSelection = val
       },
       handleSelectionThisLoopList (val) {
-        console.log(val)
         this.thisLoopListSelection = val
       },
       // 控制柜翻页相关
@@ -1451,11 +1447,19 @@
       // 灯具翻页相关
       handleSizeChangeLight (val) {
         this.lightPageSize = val
-        this.getListLighting()
+        if (this.activeName === 'lighting') {
+          this.getListLighting()
+        } else {
+          this.getListLightingByEleboxId()
+        }
       },
       handleCurrentChangeLight (val) {
         this.lightPageNumber = val
-        this.getListLighting()
+        if (this.activeName === 'lighting') {
+          this.getListLighting()
+        } else {
+          this.getListLightingByEleboxId()
+        }
       },
       addCabinet () {
         this.cabinetDialog = true
@@ -1489,6 +1493,7 @@
         switch (command) {
           case '1':
             this.showAeraDialog = true
+            this.getLevelArea()
             break
           case '2':
             this.showModelDialog = true
@@ -1521,6 +1526,7 @@
         switch (command) {
           case '1':
             this.showAeraDialog = true
+            this.getLevelArea()
             break
           case '2':
             this.setLightBoxDialog = true
@@ -1562,33 +1568,24 @@
         console.log(this.allProjectList, '所有项目信息')
         this.editCabinetDialog = true
       },
-      // 批量添加灯具
-      insertLamp () {
-        this.insertLanmpDialog = true
-        // listLightingDatalistLightingData
-        let that = this
-
-        listLightingData(that.nobeID).then(response => {
-
-          that.nobeIDlist = response.data
-          console.log('控制柜信息2', response.data)
-          // if (that.eleboxList.length > 0) {
-          //   this.allEleboxTotal = response.total
-          // } else {
-          //   this.allEleboxTotal = 0
-          // }
+      getListLightingByEleboxId () {
+        listLightingByEleboxId(this.eleboxId).then(response => {
+          this.allLightTotal = response.total
+          this.lightBelongElebox = response.data
         }).catch(error => {
           console.log(error)
         })
-        listEleboxModel2(that.nobeID).then(response => {
-          that.listEleboxModel22 = response.data
-
-          console.log('控制柜信息3', response.data)
-          // if (that.eleboxList.length > 0) {
-          //   this.allEleboxTotal = response.total
-          // } else {
-          //   this.allEleboxTotal = 0
-          // }
+      },
+      // 批量添加灯具
+      insertLamp () {
+        this.insertLanmpDialog = true
+        listLightingData(this.nobeID).then(response => {
+          this.nobeIDlist = response.data
+        }).catch(error => {
+          console.log(error)
+        })
+        listEleboxModelByEle(this.eleboxId).then(response => {
+          this.currentEleboxModel = response.data
         }).catch(error => {
           console.log(error)
         })
@@ -1599,31 +1596,27 @@
         this.notBe = 0
         this.lightPageNumber = 1
         this.lightPageSize = 10
-        this.getListLighting()
+        // this.getListLighting()
+        this.getListLightingByEleboxId()
         this.manageLanmpDialog = true
-        let that = this
-        listElebox2(e).then(response => {
-          that.eleboxList2 = response.data
-          console.log('测试', response.data)
-          console.log('控制柜信息', response.data)
-        }).catch(error => {
-          console.log(error)
-        })
       },
       // 获取GIS列表
       getListGIS () {
-        let that = this
-        listGIS().then(response => {
-          that.gisAllList = response.data
+        let type = 1
+        if (this.activeName === 'lighting') {
+          type = 0
+        }
+        listGIS(type).then(response => {
+          this.gisAllList = response.data
         }).catch(error => {
           console.log(error)
         })
       },
       // 获取灯具类型列表
       getListLightModel () {
-        let that = this
         listLightModel().then(response => {
-          that.listLightModel = response.data
+          this.listLightModel = response.data
+          console.log(this.listLightModel)
         }).catch(error => {
           console.log(error)
         })
@@ -1647,11 +1640,9 @@
       },
       // 获取控制柜相关信息
       getListElebox () {
-        let that = this
-        listElebox(that.boxPageNumber, that.boxPageSize, that.boxId, that.boxCode).then(response => {
-          that.eleboxList = response.data
-          console.log('控制柜信息', response.data)
-          if (that.eleboxList.length > 0) {
+        listElebox(this.boxPageNumber, this.boxPageSize, this.boxId, this.boxCode).then(response => {
+          this.eleboxList = response.data
+          if (this.eleboxList.length > 0) {
             this.allEleboxTotal = response.total
           } else {
             this.allEleboxTotal = 0
@@ -1688,7 +1679,7 @@
             return false
           }
         }
-        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        this.$confirm('此操作将永久删除, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -1792,7 +1783,7 @@
       },
       // 删除设备模块
       deleteModel (e) {
-        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        this.$confirm('此操作将永久删除, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -1838,7 +1829,7 @@
         this.addLoopDialog = true
       },
       deleteModelLoop (e) {
-        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        this.$confirm('此操作将永久删除, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -1859,15 +1850,17 @@
       /*
       *  灯具区域
       */
+      // 获取不属于任何控制柜的灯具
+      getLightNotBelongElebox () {
+
+      },
       // 获取灯具列表
       getListLighting () {
-        let that = this
-        // add by liupeng
-        that.eleboxId = null
-        that.notBe = null
-        listLighting(that.lightPageNumber, that.lightPageSize, that.lightId, that.lightCode).then(response => {
-          that.lightingList = response.data
-          if (that.lightingList.length > 0) {
+        // this.eleboxId = null
+        this.notBe = null
+        listLighting(this.lightPageNumber, this.lightPageSize, this.lightId, this.lightCode).then(response => {
+          this.lightingList = response.data
+          if (this.lightingList.length > 0) {
             this.allLightTotal = response.total
           } else {
             this.allLightTotal = 0
@@ -1880,7 +1873,7 @@
       editLightRow (e) {
         this.addType = 1
         this.editIndex = e
-        getLighting(this.lightingList[e].id).then(res => {
+        getLighting(e).then(res => {
           this.newLight = res.data[0]
           this.addLampDialog = true
         })
@@ -1889,7 +1882,7 @@
       deleteLightRow (type, e) {
         let _array = []
         if (type === 1) {
-          _array.push(this.lightingList[e].id)
+          _array.push(e)
         } else {
           if (this.lightMultipleSelection.length > 0) {
             this.lightMultipleSelection.forEach(selectedItem => {
@@ -1904,7 +1897,7 @@
             return false
           }
         }
-        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        this.$confirm('此操作将永久删除, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -1927,7 +1920,6 @@
       },
       // 新建、修改灯具
       onNewLightSubmit () {
-        console.log(this.newLight.useDate)
         this.newLight.useDate = new Date(this.newLight.useDate).toString()
         this.newLight.manufacture = new Date(this.newLight.manufacture).toString()
         addOrUpdateLighting(this.newLight).then(response => {
@@ -1942,7 +1934,16 @@
               message: '添加成功'
             })
           }
-          this.getListLighting()
+          if (this.activeName === 'lighting') {
+            this.getListLighting()
+          } else {
+            listLightingData(this.nobeID).then(response => {
+              this.nobeIDlist = response.data
+            }).catch(error => {
+              console.log(error)
+            })
+            this.getListLightingByEleboxId()
+          }
           this.addLampDialog = false
           this.$refs['addNewLightForm'].resetFields()
           this.newLight = {}
@@ -1953,10 +1954,10 @@
       },
       // 批量添加灯具
       onNewMoreLightSubmit () {
-        if (this.MoreLampObj.uid === null) {
+        if (this.MoreLampObj.lightingCode === null) {
           this.$message({
             type: 'error',
-            message: '请填写Uid'
+            message: '请填写唯一编码'
           })
           return false
         }
@@ -1974,19 +1975,18 @@
           })
           return false
         }
-        let _uid = parseInt(this.MoreLampObj.uid)
+        let _uid = parseInt(this.MoreLampObj.lightingCode)
         let List = []
         for (var i = 0; i < this.MoreLampObj.uidNum; i++) {
           let obj = Object.assign({}, this.newMoreLight)
-          obj.uid = _uid
-          obj.uid = obj.uid.toString()
+          obj.lightingCode = _uid
+          obj.lightingCode = obj.lightingCode.toString()
           obj.useDate = new Date(obj.useDate).toString()
           obj.manufacture = new Date(obj.manufacture).toString()
           _uid = _uid + this.MoreLampObj.num
           // obj = JSON.stringify(obj)
           List.push(obj)
         }
-        console.log(List)
         addLighting(List).then(response => {
           if (this.editIndex) {
             this.$message({
@@ -1999,7 +1999,11 @@
               message: '添加成功'
             })
           }
-          this.getListLighting()
+          listLightingData(this.nobeID).then(response => {
+            this.nobeIDlist = response.data
+          }).catch(error => {
+            console.log(error)
+          })
           this.addMoreLampDialog = false
           this.$refs['addNewMoreLightForm'].resetFields()
           this.newMoreLight = {}
@@ -2092,10 +2096,8 @@
        获取指定控制柜下的所有模块
        */
       getListEleboxModel (eleboxId) {
-        let that = this
         listEleboxModel(eleboxId).then(response => {
-          that.listEleboxModel = response.data
-          // console.log('模块',that.listEleboxModel)
+          this.listEleboxModel = response.data
         }).catch(error => {
           console.log(error)
         })
@@ -2127,7 +2129,7 @@
         this.newModelLoop = {}
       },
       deleteSplitModelLoop (e) {
-        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        this.$confirm('此操作将永久删除, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -2146,7 +2148,6 @@
       },
       // 提交回路修改
       subAllSplitLoop () {
-
         console.log(this.splitNewLoopList)
         modelLoopSplite(this.selectModelLoopId, this.splitNewLoopList).then(response => {
           console.log(response)
@@ -2185,7 +2186,7 @@
           lightIdList: _array
         }
         params = qs.stringify(params, {allowDots: true})
-        let url = 'http://47.105.38.215:8080/nnlightctl/api/roadlighting/exportElebox'
+        let url = 'http://103.48.232.124:8080/nnlightctl/api/roadlighting/exportElebox'
         axios.post(url, params, {
           ContentType: 'application/x-www-form-urlencoded',
           responseType: 'arraybuffer'
@@ -2225,7 +2226,7 @@
           lightIdList: _array
         }
         params = qs.stringify(params, {allowDots: true})
-        let url = 'http://47.105.38.215:8080/nnlightctl/api/roadlighting/exportLighting'
+        let url = 'http://103.48.232.124:8080/nnlightctl/api/roadlighting/exportLighting'
         axios.post(url, params, {
           ContentType: 'application/x-www-form-urlencoded',
           responseType: 'arraybuffer'
@@ -2243,9 +2244,6 @@
         })
       },
       goLeftLoop () {
-        console.log('222', this.thisLoopListSelection)
-        // alert(this.thisLoopList)
-
         if (this.selectEleboxModelId2 && this.selectModelLoopId3) {
           for (var i = 0; i < this.thisLoopListSelection.length; i++) {
             this.nobeIDlist.push(this.thisLoopListSelection[i])
@@ -2255,14 +2253,11 @@
               }
             }
           }
-          var a = [];
-          for (var i = 0; i < this.thisLoopList1.length; i++) {
-            a.push(i + 1)
+          var a = []
+          for (var k = 0; k < this.thisLoopList1.length; k++) {
+            a.push(k + 1)
           }
           this.options = a
-
-          // this.lightingList1 = this.lightingList1.concat(this.thisLoopListSelection)
-          // this.$refs.lightTableOfLoof.clearSelection()
         } else {
           this.$message({
             message: '请选择模块、回路',
@@ -2271,8 +2266,6 @@
         }
       },
       goRightLoop () {
-        // alert(this.thisLoopList)
-
         if (this.selectEleboxModelId2 && this.selectModelLoopId3) {
           console.log('ddd', this.lightMultipleSelection)
           // thisLoopList1
@@ -2280,38 +2273,20 @@
           for (var i = 0; i < this.lightMultipleSelection.length; i++) {
             this.thisLoopList1.push(this.lightMultipleSelection[i])
           }
-          var a = [];
-          for (var i = 0; i < this.thisLoopList1.length; i++) {
+          let a = []
+          this.thisLoopList1.length && this.thisLoopList1.forEach(d => {
             a.push(i + 1)
-          }
+          })
           this.options = a
           // if(this.lightMultipleSelection[i].id === this.nobeIDlist[j].id){
 
-
-          for (var i = 0; i < this.lightMultipleSelection.length; i++) {
+          for (var k = 0; k < this.lightMultipleSelection.length; k++) {
             for (var j = 0; j < this.nobeIDlist.length; j++) {
-              if (this.lightMultipleSelection[i].id === this.nobeIDlist[j].id) {
+              if (this.lightMultipleSelection[k].id === this.nobeIDlist[j].id) {
                 this.nobeIDlist.splice(j, 1)
               }
             }
           }
-          // this.nobeIDlist = this.nobeIDlist.concat(this.lightMultipleSelection)
-          // }
-          // for (var i = 0; i < this.lightMultipleSelection.length; i++) {
-          //   for (var j = 0; j < this.lightingList.length; j++) {
-          //     if (this.lightMultipleSelection[i].id === this.lightingList[j].id) {
-          //       this.lightingList.splice(j, 1)
-          //       // console.log(this.lightingList)
-          //     }
-          //   }
-          // }
-          // this.thisLoopList = this.thisLoopList.concat(this.lightMultipleSelection)
-          // console.log(this.thisLoopList)
-          // this.thisLoopList.divNum=''
-
-          // this.$refs.lightTableOfLoof.clearSelection()
-          // alert(this.lightingList)
-
         } else {
           this.$message({
             message: '请选择模块、回路1',
@@ -2320,7 +2295,6 @@
         }
       },
       updateLightBeEleboxBeLoop () {
-        // alert(this.thisLoopList.length)
         let _array = []
         if (this.thisLoopList1.length < 1) {
           this.$message({
@@ -2333,20 +2307,15 @@
           // 取出所有待设置选项id
           _array.push(selectedItem.id)
         })
-
-        console.log('cccccc', _array)
-        console.log('cdcdcd', this.originalLightIds)
-        if (this.panduan == 1) {
+        if (this.panduan === 1) {
           this.$message.error('序号重复请查看')
         } else {
-          updateLightBeEleboxBeLoop(this.originalLightIds, _array, this.selectEleboxModelId2, this.selectModelLoopId3).then(response => {
+          updateLightBeEleboxBeLoop(this.originalLightIds, _array, this.eleboxId, this.selectModelLoopId3).then(response => {
             this.insertLanmpDialog = false
-            // this.thisLoopList1 = []
           }).catch(error => {
             console.log(error)
           })
         }
-
       },
       deleteLightOfLoop (e) {
         this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -2370,7 +2339,7 @@
       unbindLightBeElebox (type, e) {
         let _array = []
         if (type === 1) {
-          _array.push(this.lightingList[e].id)
+          _array.push(e)
         } else {
           if (this.lightMultipleSelection.length > 0) {
             this.lightMultipleSelection.forEach(selectedItem => {
@@ -2395,7 +2364,7 @@
               type: 'success',
               message: '删除成功!'
             })
-            this.getListLighting()
+            this.getListLightingByEleboxId()
           }).catch(error => {
             console.log(error)
           })
@@ -2408,28 +2377,24 @@
       },
       changeMokuai: function (index) {
         var that = this
-        console.log('id', index)
         listModelLoopList(index).then(res => {
           // console.log('id',res.data)
-          that.listModelLoop2 = res.data
-          that.selectModelLoopId3 = res.data[0].loopCode
+          this.listModelLoop2 = res.data
+          this.selectModelLoopId3 = res.data[0].loopCode
           getLoopLight(res.data[0].id).then(response => {
-            that.thisLoopList1 = response.data
+            this.thisLoopList1 = response.data
             var a = []
-            for (var i = 0; i < that.thisLoopList1.length; i++) {
+            for (var i = 0; i < this.thisLoopList1.length; i++) {
               console.log('ididid', that.thisLoopList1[i].id)
               a.push(that.thisLoopList1[i].id)
             }
             that.originalLightIds = a
             console.log('回路', response.data)
-            var a = new Array();
-            for (var i = 0; i < response.data.length; i++) {
-              // console.log('序号',response.data)
-              a.push(i + 1)
-            }
-            console.log('序号', a)
-            that.options = a
-            console.log(that.options)
+            let arr = []
+            response.data.forEach((d, i) => {
+              arr.push(i + 1)
+            })
+            that.options = arr
           })
         })
       },
@@ -2524,7 +2489,7 @@
   }
 
   .area-dialog-content {
-    min-height: 200px;
+    min-height: 100px;
   }
 
   .area-tree {
@@ -2571,10 +2536,12 @@
   // 新增控制柜
   .cabinet-list {
     margin: 0 auto;
-    width: 530px;
-    padding: 20px;
-    box-sizing: 100%;
+    width: 760px;
+    padding: 10px 20px;
+    box-sizing: border-box;
     border: 1px solid #dedede;
+    height: 400px;
+    overflow-y: auto;
   }
 
   .operate-block {
@@ -2647,6 +2614,10 @@
         margin: 20px 0;
       }
     }
+  }
+
+  .select-area-title {
+    padding: 10px 0;
   }
 
   // 管理灯具

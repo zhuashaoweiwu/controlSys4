@@ -1,10 +1,3 @@
-/*
-* @Author: Ouber23
-* @Date: 2018-07-10 11:37:54
-* @Last Modified by: Ouber23
-* @Last Modified time: 2018-07-10 00:55:19
-*/
-
 <template>
   <div class="energy-analyze">
     <h4 class="analyze-title">用电量</h4>
@@ -102,52 +95,8 @@
             {
               name: '用电量',
               type: 'bar',
-              barWidth: 50,
+              barWidth: 20,
               data: []
-            }
-          ]
-        },
-        monthTotal: {
-          title: {
-            text: '月消耗'
-          },
-          tooltip: {
-            trigger: 'item',
-            formatter: '{a} <br/>{b}: {c} ({d}%)'
-          },
-          legend: {
-            orient: 'vertical',
-            x: 'left',
-            data: ['城市消耗', '民用消耗']
-          },
-          series: [
-            {
-              name: '访问来源',
-              type: 'pie',
-              radius: ['50%', '70%'],
-              avoidLabelOverlap: false,
-              label: {
-                normal: {
-                  show: true,
-                  position: 'center'
-                },
-                emphasis: {
-                  show: true,
-                  textStyle: {
-                    fontSize: '30',
-                    fontWeight: 'bold'
-                  }
-                }
-              },
-              labelLine: {
-                normal: {
-                  show: false
-                }
-              },
-              data: [
-                {value: 335, name: '直接访问'},
-                {value: 310, name: '邮件营销'}
-              ]
             }
           ]
         },
@@ -178,8 +127,7 @@
                   funnel: {
                     x: '25%',
                     width: '50%',
-                    funnelAlign: 'left',
-                    max: 1548
+                    funnelAlign: 'left'
                   }
                 }
               },
@@ -197,7 +145,7 @@
               minAngle: 15,
               data: [
                 {value: 0, name: '本月能耗'},
-                {value: 100, name: '本年能耗'}
+                {value: 0, name: '本年能耗'}
               ]
             }
           ]
@@ -229,8 +177,7 @@
                   funnel: {
                     x: '25%',
                     width: '50%',
-                    funnelAlign: 'left',
-                    max: 1548
+                    funnelAlign: 'left'
                   }
                 }
               },
@@ -248,51 +195,7 @@
               minAngle: 15,
               data: [
                 {value: 0, name: '本天能耗'},
-                {value: 100, name: '本月能耗'}
-              ]
-            }
-          ]
-        },
-        dayTotal: {
-          title: {
-            text: '月消耗'
-          },
-          tooltip: {
-            trigger: 'item',
-            formatter: '{a} <br/>{b}: {c} ({d}%)'
-          },
-          legend: {
-            orient: 'vertical',
-            x: 'left',
-            data: ['城市消耗', '民用消耗']
-          },
-          series: [
-            {
-              name: '访问来源',
-              type: 'pie',
-              radius: ['50%', '70%'],
-              avoidLabelOverlap: false,
-              label: {
-                normal: {
-                  show: true,
-                  position: 'center'
-                },
-                emphasis: {
-                  show: true,
-                  textStyle: {
-                    fontSize: '30',
-                    fontWeight: 'bold'
-                  }
-                }
-              },
-              labelLine: {
-                normal: {
-                  show: false
-                }
-              },
-              data: [
-                {value: 335, name: '直接访问'},
-                {value: 310, name: '邮件营销'}
+                {value: 0, name: '本月能耗'}
               ]
             }
           ]

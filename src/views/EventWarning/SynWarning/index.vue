@@ -1,9 +1,9 @@
 /*
- * @Author: Ouber23
- * @Date: 2018-08-14 04:49:28
- * @LastEditors: Ouber23
- * @LastEditTime: 2018-08-14 04:54:59
- */
+* @Author: Ouber23
+* @Date: 2018-08-14 04:49:28
+* @LastEditors: Ouber23
+* @LastEditTime: 2018-08-14 04:54:59
+*/
 <template>
   <div id="EleboxWarning">
     <div id="dataTable">
@@ -79,7 +79,7 @@
           :current-page.sync="currentPage3"
           :page-size="10"
           layout="prev, pager, next, jumper"
-          :total="39">
+          :total="5">
         </el-pagination>
       </div>
     </div>
@@ -87,135 +87,135 @@
 </template>
 
 <script>
-// import Vue from 'vue'
-// import { listElebox } from '@/api/GisService/lamp'
-// import { getLighting } from '@/api/RoadLighting/deploy'
-import '../../../utils/filter.js'
-import { getListAlarm } from '@/api/EventWarning/EventWarning'
-import moment from 'moment';
-export default {
-  name: 'Elebox',
-  data () {
-    return {
-      isSynData: true, // 是否同步数据
-      formInline: {
-        elebox: '',
-        states: '',
-        level: '',
-        uid: ''
-      },
-      tableData: [{
-        state: '良好',
-        alarmLevel: '三级警报',
-        codeNumber: '控制柜一/上海市普陀区金沙江路 1518 弄',
-        alarmSource: '上海xxxx',
-        name: 'XXX警报',
-        ctype: '普通灯警报',
-        gmtCreated: 'e222323',
-        gmtUpdated: '201-121',
-        nnlightctlAlarmConfigId: '11',
-        alarmTime: '2016-05-02',
-        msg: '事件报警',
-        alarmCount: '3'
-      },
-      {
-        state: '良好',
-        alarmLevel: '三级警报',
-        codeNumber: '控制柜一/上海市普陀区金沙江路 1518 弄',
-        alarmSource: '上海xxxx',
-        name: 'XXX警报',
-        ctype: '普通灯警报',
-        gmtCreated: 'e222323',
-        gmtUpdated: '201-121',
-        nnlightctlAlarmConfigId: '11',
-        alarmTime: '2016-05-02',
-        msg: '事件报警',
-        alarmCount: '3'
-      },
-      {
-        state: '良好',
-        alarmLevel: '三级警报',
-        codeNumber: '控制柜一/上海市普陀区金沙江路 1518 弄',
-        alarmSource: '上海xxxx',
-        name: 'XXX警报',
-        ctype: '普通灯警报',
-        gmtCreated: 'e222323',
-        gmtUpdated: '201-121',
-        nnlightctlAlarmConfigId: '11',
-        alarmTime: '2016-05-02',
-        msg: '事件报警',
-        alarmCount: '3'
-      },
-      {
-        state: '良好',
-        alarmLevel: '三级警报',
-        codeNumber: '控制柜一/上海市普陀区金沙江路 1518 弄',
-        alarmSource: '上海xxxx',
-        name: 'XXX警报',
-        ctype: '普通灯警报',
-        gmtCreated: 'e222323',
-        gmtUpdated: '201-121',
-        nnlightctlAlarmConfigId: '11',
-        alarmTime: '2016-05-02',
-        msg: '事件报警',
-        alarmCount: '3'
-      }],
-      currentPage3: 5,
-    }
-  },
-  computed: {
-  },
-  methods: {
-    // 初始化获取数据
-    getListAlarm(pageNumber, pageSize) {
-      let that = this;
-      getListAlarm(pageNumber, pageSize).then((res)=>{
-        console.log(res, '初始化shuju');
-        // 初始化表格
-        that.tableData = res.data;
-      })
-    },
-    //时间格式化
-    dateFormat:function(row, column) {
-      var date = row[column.property];
-      if (date == undefined) {
-        return "";
-      }
-        return moment(date).format("YYYY-MM-DD HH:mm:ss");
-    },
-    onSubmit () {
-      console.log('submit!');
-    },
-    onResume () {
-      console.log('resume')
-    },
-    toggleSelection(rows) {
-      if (rows) {
-        rows.forEach(row => {
-          this.$refs.multipleTable.toggleRowSelection(row);
-        });
-      } else {
-        this.$refs.multipleTable.clearSelection();
+  // import Vue from 'vue'
+  // import { listElebox } from '@/api/GisService/lamp'
+  // import { getLighting } from '@/api/RoadLighting/deploy'
+  import '../../../utils/filter.js'
+  import {getListAlarm} from '@/api/EventWarning/EventWarning'
+  import moment from 'moment'
+
+  export default {
+    name: 'Elebox',
+    data () {
+      return {
+        isSynData: true, // 是否同步数据
+        formInline: {
+          elebox: '',
+          states: '',
+          level: '',
+          uid: ''
+        },
+        tableData: [{
+          state: '良好',
+          alarmLevel: '三级警报',
+          codeNumber: '控制柜一/上海市普陀区金沙江路 1518 弄',
+          alarmSource: '上海xxxx',
+          name: 'XXX警报',
+          ctype: '普通灯警报',
+          gmtCreated: 'e222323',
+          gmtUpdated: '201-121',
+          nnlightctlAlarmConfigId: '11',
+          alarmTime: '2016-05-02',
+          msg: '事件报警',
+          alarmCount: '3'
+        },
+          {
+            state: '良好',
+            alarmLevel: '三级警报',
+            codeNumber: '控制柜一/上海市普陀区金沙江路 1518 弄',
+            alarmSource: '上海xxxx',
+            name: 'XXX警报',
+            ctype: '普通灯警报',
+            gmtCreated: 'e222323',
+            gmtUpdated: '201-121',
+            nnlightctlAlarmConfigId: '11',
+            alarmTime: '2016-05-02',
+            msg: '事件报警',
+            alarmCount: '3'
+          },
+          {
+            state: '良好',
+            alarmLevel: '三级警报',
+            codeNumber: '控制柜一/上海市普陀区金沙江路 1518 弄',
+            alarmSource: '上海xxxx',
+            name: 'XXX警报',
+            ctype: '普通灯警报',
+            gmtCreated: 'e222323',
+            gmtUpdated: '201-121',
+            nnlightctlAlarmConfigId: '11',
+            alarmTime: '2016-05-02',
+            msg: '事件报警',
+            alarmCount: '3'
+          },
+          {
+            state: '良好',
+            alarmLevel: '三级警报',
+            codeNumber: '控制柜一/上海市普陀区金沙江路 1518 弄',
+            alarmSource: '上海xxxx',
+            name: 'XXX警报',
+            ctype: '普通灯警报',
+            gmtCreated: 'e222323',
+            gmtUpdated: '201-121',
+            nnlightctlAlarmConfigId: '11',
+            alarmTime: '2016-05-02',
+            msg: '事件报警',
+            alarmCount: '3'
+          }],
+        currentPage3: 5
       }
     },
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
+    computed: {},
+    methods: {
+      // 初始化获取数据
+      getListAlarm (pageNumber, pageSize) {
+        let that = this
+        getListAlarm(pageNumber, pageSize).then((res) => {
+          console.log(res, '初始化shuju')
+          // 初始化表格
+          that.tableData = res.data
+        })
+      },
+      // 时间格式化
+      dateFormat: function (row, column) {
+        var date = row[column.property]
+        if (date === undefined) {
+          return ''
+        }
+        return moment(date).format('YYYY-MM-DD HH:mm:ss')
+      },
+      onSubmit () {
+        console.log('submit!')
+      },
+      onResume () {
+        console.log('resume')
+      },
+      toggleSelection (rows) {
+        if (rows) {
+          rows.forEach(row => {
+            this.$refs.multipleTable.toggleRowSelection(row)
+          })
+        } else {
+          this.$refs.multipleTable.clearSelection()
+        }
+      },
+      handleSelectionChange (val) {
+        this.multipleSelection = val
+      },
+      // currentPage3 () {
+      //   return 1
+      // },
+      handleSizeChange (val) {
+        console.log(`每页 ${val} 条`)
+      },
+      handleCurrentChange (val) {
+        console.log(`当前页: ${val}`)
+      }
     },
-    // currentPage3 () {
-    //   return 1
-    // },
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
-    },
-    handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+    created () {
+      let that = this
+      that.getListAlarm(1, 20)
     }
-  },
-  created () {
-    let that = this
-    that.getListAlarm(1, 20)
   }
-}
 </script>
 
 <style lang="scss" scoped>
@@ -223,11 +223,13 @@ export default {
     padding-left: 32px;
     padding-top: 10px;
   }
+
   #dataTable {
     padding-left: 32px;
     padding-top: 10px;
     padding-right: 32px;
   }
+
   .operator {
     margin-top: 20px;
     margin-bottom: 20px;

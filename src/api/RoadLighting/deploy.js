@@ -106,11 +106,11 @@ export function listElebox (pageNumber, pageSize, uid, codeNumber) {
   })
 }
 
-export function listElebox2 (eleboxId) {
+export function listLightingByEleboxId (eleboxId) {
   return request({
     url: '/api/roadlighting/listLighting',
     method: 'post',
-    params: {
+    data: {
       eleboxId
     }
   })
@@ -129,8 +129,8 @@ let nnlightctlEleboxId
 export function listEleboxModel (eleboxId, pageNumber, pageSize) {
   return request({
     url: '/api/roadlighting/listmodel',
-    method: 'get',
-    params: {
+    method: 'post',
+    data: {
       eleboxId,
       nnlightctlEleboxId,
       pageNumber,
@@ -139,11 +139,11 @@ export function listEleboxModel (eleboxId, pageNumber, pageSize) {
   })
 }
 
-export function listEleboxModel2 (eleboxId, pageNumber, pageSize) {
+export function listEleboxModelByEle (eleboxId, pageNumber, pageSize) {
   return request({
     url: '/api/roadlighting/listmodel',
-    method: 'get',
-    params: {
+    method: 'post',
+    data: {
       eleboxId,
       pageNumber,
       pageSize
@@ -160,8 +160,8 @@ export function listEleboxModel2 (eleboxId, pageNumber, pageSize) {
 export function listModelLoop (modelId) {
   return request({
     url: '/api/roadlighting/listmodelloop',
-    method: 'get',
-    params: {
+    method: 'post',
+    data: {
       modelId
     }
   })
@@ -170,8 +170,8 @@ export function listModelLoop (modelId) {
 export function listModelLoopList (modelId) {
   return request({
     url: '/api/roadlighting/listmodelloop',
-    method: 'get',
-    params: {
+    method: 'post',
+    data: {
       modelId
     }
   })
@@ -243,8 +243,8 @@ export function listLighting (pageNumber, pageSize, uuid, lightingCode) {
 export function listLightingList (pageNumber, pageSize, eleboxId, notBe) {
   return request({
     url: '/api/roadlighting/listLighting',
-    method: 'get',
-    params: {
+    method: 'post',
+    data: {
       pageNumber,
       pageSize,
       eleboxId,
@@ -256,9 +256,9 @@ export function listLightingList (pageNumber, pageSize, eleboxId, notBe) {
 export function listLightingData (notBe) {
   return request({
     url: '/api/roadlighting/listLighting',
-    method: 'get',
-    params: {
-      notBe: 1
+    method: 'post',
+    data: {
+      notBe: notBe
     }
   })
 }
@@ -284,7 +284,7 @@ export function getLighting (id) {
   return request({
     url: '/api/roadlighting/getLighting',
     method: 'post',
-    params: {
+    data: {
       id
     }
   })
@@ -345,6 +345,14 @@ export function listArea (pageNumber, pageSize, areaName) {
   })
 }
 
+// 获取全部区域，按层级表示
+export function getLevelArea () {
+  return request({
+    url: '/api/roadlighting/getLevelArea',
+    method: 'post'
+  })
+}
+
 /**
  * 添加编辑区域
  * @export
@@ -356,6 +364,30 @@ export function addOrUpdateArea (obj) {
     url: '/api/roadlighting/addOrUpdateArea',
     method: 'post',
     data: obj
+  })
+}
+
+// 批量设置控制柜区域
+export function batchSetEleboxArea (beAreaId, eleboxIds) {
+  return request({
+    url: '/api/roadlighting/batchSetEleboxArea',
+    method: 'post',
+    data: {
+      beAreaId,
+      eleboxIds
+    }
+  })
+}
+
+// 批量设置灯具区域
+export function batchSetLightingArea (beAreaId, lightIds) {
+  return request({
+    url: '/api/roadlighting/batchSetLightingArea',
+    method: 'post',
+    data: {
+      beAreaId,
+      lightIds
+    }
   })
 }
 
@@ -386,8 +418,8 @@ export function deleteArea (areaIdList) {
 export function listGIS (pageNumber, pageSize, type) {
   return request({
     url: '/api/roadlighting/listGIS',
-    method: 'get',
-    params: {
+    method: 'post',
+    data: {
       pageNumber,
       pageSize,
       type
@@ -468,8 +500,8 @@ export function exportLighting (lightIdList) {
 export function getLoopLight (id) {
   return request({
     url: '/api/roadlighting/getLoopLight',
-    method: 'get',
-    params: {
+    method: 'post',
+    data: {
       id
     }
   })
@@ -478,8 +510,8 @@ export function getLoopLight (id) {
 export function getLoopLight1 (id, priority) {
   return request({
     url: '/api/roadlighting/updateLightPriority',
-    method: 'get',
-    params: {
+    method: 'post',
+    data: {
       id,
       priority
     }
@@ -496,7 +528,7 @@ export function getLoopLight1 (id, priority) {
  */
 export function updateLightBeEleboxBeLoop (originalLightIds, lightIdList, beEleboxId, modelLoopId) {
   return request({
-    url: '/api/roadlighting/updateLightBeEleboxBeLoop',
+    url: '/api/roadlighting/updateLightBeEleboxBeLoop2',
     method: 'post',
     data: {
       originalLightIds,

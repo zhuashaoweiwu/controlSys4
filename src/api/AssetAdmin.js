@@ -1,10 +1,15 @@
 import request from '@/utils/request'
+import qs from 'qs'
+import axios from 'axios'
+import Vue from 'vue'
 
-export function listMasker () {
+export function listMasker (pageNumber, pageSize, department, phoneNumber) {
   return request({
     url: '/api/propertyManager/listMasker',
     method: 'post',
-    data: {}
+    data: {
+      pageNumber, pageSize, department, phoneNumber
+    }
   })
 }
 
@@ -30,6 +35,20 @@ export function listDeviceDamageCountByMonth (startDate, endDate) {
   })
 }
 
+export function exportDeviceOperation (param) {
+  let params = qs.stringify(param, {allowDots: true})
+  axios.post(Vue.conf.api.exportDeviceOperation, params, {
+    ContentType: 'application/x-www-form-urlencoded',
+    responseType: 'arraybuffer'
+  }).then((res) => {
+    console.log(res)
+    let blob = new Blob([res.data], {type: 'application/vnd.ms-excel'})
+    let objectUrl = URL.createObjectURL(blob)
+    window.location.href = objectUrl
+  }).catch(function (res) {
+  })
+}
+
 //   联系人添加
 
 export function isvalidPhone (str) {
@@ -37,13 +56,11 @@ export function isvalidPhone (str) {
   return reg.test(str)
 }
 
-export function addOrUpdateMasker (maskName, sex, age, phoneNumber, email, place, nnlightctlMaskerId, codeNumber, department) {
+export function addOrUpdateMasker (obj) {
   return request({
     url: '/api/propertyManager/addOrUpdateMasker',
     method: 'post',
-    data: {
-      maskName, sex, age, phoneNumber, email, place, nnlightctlMaskerId, codeNumber, department
-    }
+    data: obj
   })
 }
 
@@ -95,23 +112,29 @@ export function listRepairRecord (isCommit) {
   })
 }
 
+export function listPropertyClassifyCatalogLevel1 () {
+  return request({
+    url: '/api/propertyManager/listPropertyClassifyCatalogLevel1',
+    method: 'post',
+    data: {}
+  })
+}
+
+export function listSubPropertyClassifyCatalog (id) {
+  return request({
+    url: '/api/propertyManager/listSubPropertyClassifyCatalog',
+    method: 'post',
+    data: {id: id}
+  })
+}
+
 //   新增
 
-export function addOrUpdateRepairRecord (id, nnlightctlEleboxId, nnlightctlPropertyClassifyCatalogId, propertyName, propertyCount, faultDate, createDate, nnlightctlUserId, isCommit) {
+export function addOrUpdateRepairRecord (obj) {
   return request({
     url: '/api/propertyManager/addOrUpdateRepairRecord',
     method: 'post',
-    data: {
-      id,
-      nnlightctlEleboxId,
-      nnlightctlPropertyClassifyCatalogId,
-      propertyName,
-      propertyCount,
-      faultDate,
-      createDate,
-      nnlightctlUserId,
-      isCommit
-    }
+    data: obj
   })
 }
 
@@ -122,7 +145,7 @@ export function deleteRepairRecord (repairRecordIds) {
     url: '/api/propertyManager/deleteRepairRecord',
     method: 'post',
     data: {
-      repairRecordIds
+      repairRecordIds: repairRecordIds
     }
   })
 }
@@ -134,7 +157,7 @@ export function commitRepairRecord (repairRecordIds) {
     url: '/api/propertyManager/commitRepairRecord',
     method: 'post',
     data: {
-      repairRecordIds
+      repairRecordIds: repairRecordIds
     }
   })
 }

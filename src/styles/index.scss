@@ -5,20 +5,23 @@
 @import './element-ui.scss';
 @import './sidebar.scss';
 @import './system.scss';
-html,body,h1,h2,h3,h4,h5,h6,div,dl,dt,dd,ul,ol,li,p,pre,hr,table,caption,th,td,form,input,button,textarea{
-  margin:0;
-  padding:0;
+
+html, body, h1, h2, h3, h4, h5, h6, div, dl, dt, dd, ul, ol, li, p, pre, hr, table, caption, th, td, form, input, button, textarea {
+  margin: 0;
+  padding: 0;
   border: 0;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   // word-break: break-all;
-  
+
 }
-header,footer,section,article,aside,nav,hgroup,address,figure,figcaption,menu,details{
-  display:block;
+
+header, footer, section, article, aside, nav, hgroup, address, figure, figcaption, menu, details {
+  display: block;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
+
 body {
   height: 100%;
   -moz-osx-font-smoothing: grayscale;
@@ -36,7 +39,7 @@ html {
   box-sizing: border-box;
 }
 
-#app{
+#app {
   height: 100%;
 }
 
@@ -55,9 +58,9 @@ a:hover {
   text-decoration: none;
 }
 
-div:focus{
+div:focus {
   outline: none;
- }
+}
 
 a:focus,
 a:active {
@@ -82,15 +85,17 @@ a:hover {
     height: 0;
   }
 }
-.f-l{
+
+.f-l {
   float: left;
 }
-.f-r{
+
+.f-r {
   float: right
 }
 
 //main-container全局样式
-.app-main{
+.app-main {
   min-height: 100%;
   // position: relative;
 }
@@ -98,32 +103,44 @@ a:hover {
 .app-container {
   padding: 20px;
 }
-.main-container{
-  min-width:950px;
+
+.main-container {
+  min-width: 950px;
 }
-.danger-text-btn{
+
+.danger-text-btn {
   color: #f56c6c
 }
+
 // 数据列表头部样式
-.datalist-header{
+.datalist-header {
   background-color: #f7f7f7 !important;
   color: #333;
   font-weight: bold;
-  th{
+
+  th {
     background-color: #f7f7f7 !important;
   }
 }
+
 // 格式化dialog
-.el-button--primary{
+.el-button--primary {
   background: #5789fa;
 }
-.el-dialog{
+
+.el-dialog {
   width: 500px;
   margin-top: 10vh !important;
 }
-.el-dialog__body{
+
+.el-dialog__body {
   padding: 20px 20px 0 20px !important;
 }
-.el-form-item{
+
+.el-form-item {
   margin-bottom: 20px;
+}
+
+.el-date-editor .el-range-separator {
+  padding: 0;
 }

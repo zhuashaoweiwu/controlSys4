@@ -1,10 +1,8 @@
 <template>
   <div class='map-wrap'>
-    <el-amap vid='amapDemo1' :center="center" :zooms="zooms" :plugin='plugin' :zoom="zoom">
-      <el-amap-marker v-for="(marker, index) in markers" :key="index" :template='marker.template'
-                      :position="marker.position" :events="marker.events" :visible="marker.visible"
-                      :draggable="marker.draggable" :vid="index"></el-amap-marker>
-    </el-amap>
+    <!--地图容器-->
+    <div id="project-map"></div>
+    <!--查询项目-->
     <div class='search-wrap'>
       <el-select v-model="selectProject" filterable placeholder="请输入内容" clearable @clear="loadProjectList">
         <el-option
@@ -14,7 +12,7 @@
           :value="item.projectName">
         </el-option>
       </el-select>
-      <el-button type='primary' icon='el-icon-search' @click="loadProjectList"></el-button>
+      <el-button type='primary' icon='el-icon-search' @click="setCurrentProject"></el-button>
     </div>
   </div>
 </template>
@@ -26,85 +24,59 @@
     name: 'GisIndex',
     data () {
       return {
-        zooms: [2, 16],
         zoom: 14,
         markers: [],
         center: [108.59996, 32.197646],
-        plugin: [{
-          pName: 'MapType',
-          defaultType: 0
-        },
-          {
-            pName: 'ToolBar',
-            position: 'RB',
-            liteStyle: true,
-            locate: true,
-            noIpLocate: true
-          }],
         projects: [],
-        selectProject: ''
+        selectProject: '',
+        projectMap: null
       }
     },
     methods: {
-      loadProjectList () {
-        let that = this
+      loadProjectList () { // 获取所有项目列表
         let marks = []
         listProject(this.selectProject).then(res => {
           let projectList = res.data
-          console.log(res.data)
-          that.setCenter(res.data[0].longitude, res.data[0].latitude) // 设置地图中心点
+          this.projectMap.setCenter([res.data[0].longitude, res.data[0].latitude])
           projectList.forEach(element => {
-            let _data = {
-              position: [element.longitude, element.latitude],
-              events: {
-                click: () => {
+            let gps = [element.longitude, element.latitude]
+            AMap.convertFrom(gps, 'gps', (status, result) => { // 坐标转换
+              if (result.info === 'ok') {
+                let markData = new AMap.Marker({
+                  position: new AMap.LngLat(result.locations[0].lng, result.locations[0].lat),
+                  content: `<i class="iconfont">&#xe638;</i>`,
+                  label: {content: element.projectName, offset: (10, 30)}
+                })
+                markData.on('click', () => { // 添加坐标点点击事件
                   this.$router.push({path: '/gisservice/lamp', query: {projectId: element.id}})
-                }
-              },
-              visible: true,
-              draggable: false,
-              template: `
-              <el-tooltip placement="bottom-start">
-                <div slot="content">经度：${element.longitude}<br/>纬度：${element.latitude}</div>
-                <div class="project-mark">
-                  <span class="project-name">${element.projectName}</span>
-                  <i class="iconfont">&#xe638;</i>
-                </div>
-              </el-tooltip>
-            `
-            }
-            marks.push(_data)
+                })
+                marks.push(markData)
+                this.projectMap.add(marks)
+              }
+            })
           })
-          that.projects = projectList
-          that.markers = marks
+          this.projects = projectList
+          //  this.markers = marks
         })
       },
-      setCurrentProject () {
-        let pid = this.selectProject
-        if (pid) {
-          this.$router.push('/gisservice/lamp')
+      setCurrentProject () { // 选择当前项目
+        if (this.selectProject) {
+          this.loadProjectList()
         } else {
           this.$message({
             message: '请选择一个项目',
             type: 'warning'
           })
         }
-      },
-      // 设置地图中心点
-      setCenter (longitude, latitude) {
-        // 经度 纬度
-        // console.log(longitude, latitude, 888888)
-        this.center = [longitude, latitude]
       }
     },
-    created () {
-    },
     mounted () {
+      this.projectMap = new AMap.Map('project-map', {
+        resizeEnable: true, // 自适应大小
+        zoom: 12, // 初始视窗
+        center: [116.397428, 39.90923]
+      })
       this.loadProjectList()
-      console.log(this.center)
-    },
-    destroyed () {
-      localStorage.clear()
     }
   }
 </script>
@@ -116,6 +88,11 @@
     right: 0;
     left: 200px;
     bottom: 0;
+  }
+
+  #project-map {
+    width: 100%;
+    height: 100%;
   }
 
   .search-wrap {

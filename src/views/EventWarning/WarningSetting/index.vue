@@ -1,9 +1,10 @@
 <template>
   <div class="system-container">
-    <el-tabs v-model="activeName" @tab-click="tabHandleClick">
+    <el-tabs v-model="activeName">
       <el-tab-pane label="控制柜警报" name="cabinet">
         <div id="open-alarm" class="open-alram-btn">
-          <el-button type="primary" @click="handleOpenAlara()">是否开启报警</el-button>
+          <el-button type="primary" @click="openAlarmSet(0)">是否开启报警</el-button>
+          <el-button type="primary" @click="handleOpenSet()">设置报警信息</el-button>
         </div>
         <div id="ele-warning">
           <el-row style="margin: 20px 0">
@@ -114,7 +115,88 @@
       </el-tab-pane>
       <el-tab-pane label="常规灯具警报" name="lighting">
         <div id="open-alarm2" class="open-alram-btn">
-          <el-button type="primary" @click="handleOpenAlara()">是否开启报警</el-button>
+          <el-button type="primary" @click="openAlarmSet(1)">是否开启报警</el-button>
+          <el-button type="primary" @click="handleOpenSet()">设置报警信息</el-button>
+        </div>
+        <div id="light-warning">
+          <el-row style="margin: 20px 0">
+            <el-col :span="6">
+              <div class="light-wrap" @click="handleLightOpen()">
+                <h4 class="light-wrap-title">灯具故障</h4>
+                <i class="light-right icon-item"></i>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div class="light-wrap" @click="handleLightOpen()">
+                <h4 class="light-wrap-title">电源故障</h4>
+                <i class="icon-item light-wrong" :style="{ opacity: 1 }"></i>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div class="light-wrap" @click="handleLightOpen()">
+                <h4 class="light-wrap-title">补偿电容</h4>
+                <i class="icon-item lines" :style="{ opacity: 1 }"></i>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div class="light-wrap" @click="handleLightOpen()">
+                <h4 class="light-wrap-title">灯杆漏电</h4>
+                <i class="icon-item xianluguoya" :style="{ opacity: 1 }">&#xe62b;</i>
+              </div>
+            </el-col>
+          </el-row>
+          <el-row style="margin: 20px 0">
+            <el-col :span="6">
+              <div class="light-wrap" @click="handleLightOpen()">
+                <h4 class="light-wrap-title">节点丢失</h4>
+                <i class="icon-item xianluqianya" :style="{ opacity: 1 }"></i>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div class="light-wrap" @click="handleLightOpen()">
+                <h4 class="light-wrap-title">继电器故障</h4>
+                <i class="icon-item peidianguiduandian" :style="{ opacity: 1 }"></i>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div class="light-wrap" @click="handleLightOpen()">
+                <h4 class="light-wrap-title">灯具过流</h4>
+                <i class="icon-item electricity_meter_unconnected" :style="{ opacity: 1 }"></i>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div class="light-wrap" @click="handleLightOpen()">
+                <h4 class="light-wrap-title">灯具过压</h4>
+                <i class="icon-item electricity" :style="{ opacity: 1 }"></i>
+              </div>
+            </el-col>
+          </el-row>
+          <el-row style="margin: 20px 0">
+            <el-col :span="6">
+              <div class="light-wrap" @click="handleLightOpen()">
+                <h4 class="light-wrap-title">高温</h4>
+                <i class="icon-item electricity_meter2" :style="{ opacity: 1 }"></i>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div class="light-wrap" @click="handleLightOpen()">
+                <h4 class="light-wrap-title">灯具寿命</h4>
+                <i class="icon-item open_door" :style="{ opacity: 1 }"></i>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div class="light-wrap" @click="handleLightOpen()">
+                <h4 class="light-wrap-title">检修口门</h4>
+                <i class="icon-item elexbox_1" :style="{ opacity: 1 }"></i>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div class="light-wrap" @click="handleLightOpen()">
+                <h4 class="light-wrap-title">灯杆倾斜</h4>
+                <i class="icon-item Group_4" :style="{ opacity: 1 }"></i>
+              </div>
+            </el-col>
+          </el-row>
         </div>
       </el-tab-pane>
     </el-tabs>
@@ -122,7 +204,7 @@
     <el-dialog class="opendialog" title="是否开启警报" :visible.sync="openAlarmVisible">
       <el-table
         ref="multipleTable"
-        :data="openAlarmBoxData"
+        :data="alarmData"
         tooltip-effect="dark"
         style="width: 100%">
         <el-table-column
@@ -146,13 +228,13 @@
     </el-dialog>
 
     <!--意外亮灯-->
-    <el-dialog title="意外亮灯" :visible.sync="lightisUseVisible">
+    <el-dialog title="意外亮灯" :visible.sync="lightSetVisible">
       <el-row>
         <el-col :span="6">
           <span>警报等级</span>
         </el-col>
         <el-col :span="18">
-          <el-select v-model="value" placeholder="请选择">
+          <el-select v-model="alermConfigData.alarmLevel" placeholder="请选择">
             <el-option
               v-for="(item, index) in alarmLevelOptions"
               :key="index"
@@ -174,12 +256,12 @@
       </el-row>
       <el-row>
         <el-col :span="18" :offset="6">
-          <el-checkbox v-model="alermConfigData.isWechat">发送微信警报信息</el-checkbox>
+          <el-checkbox v-model="alermConfigData.isNoticeWeixin">发送微信警报信息</el-checkbox>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="18" :offset="6">
-          <el-checkbox v-model="alermConfigData.isEmail">发送邮件警报信息</el-checkbox>
+          <el-checkbox v-model="alermConfigData.isNoticeEmail">发送邮件警报信息</el-checkbox>
         </el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">
@@ -200,29 +282,20 @@
         activeName: 'cabinet',
         lightisUseVisible: false,
         openAlarmVisible: false,
-        lightOpenVisible: false, // 意外亮灯显示控制
-        options: [],
-        alermConfigData: {
-          alarmLevel: true,
-          isNoticeMap: false,
-          isNoticeSms: true,
-          isWechat: true,
-          isEmail: false
-        },
+        lightSetVisible: false, // 意外亮灯显示控制
         alarmLevelOptions: [
-          {
-            value: '严重（等级一）',
-            label: '等级一'
-          },
-          {
-            value: '严重（等级一）',
-            label: '等级一'
-          },
-          {
-            value: '严重（等级一）',
-            label: '等级一'
-          }
+          {label: '低', value: 0},
+          {label: '中', value: 1},
+          {label: '高', value: 2}
         ],
+        alermConfigData: {
+          alarmLevel: 0,
+          isNoticeMap: false,
+          isNoticeSms: false,
+          isNoticeWeixin: false,
+          isNoticeEmail: false
+        },
+        alarmData: [],
         openAlarmBoxData: [
           {
             ctype: '意外亮灯',
@@ -305,14 +378,69 @@
             isUse: false
           }
         ],
-        value: ''
-      }
-    },
-    watch: {
-      activeName: function (val, oldVal) {
-        if (val === 'lighting') {
-        } else {
-        }
+        openAlarmLightData: [
+          {
+            ctype: '灯具故障',
+            alarmSource: '控制柜',
+            isUse: false
+          },
+          {
+            ctype: '电源故障',
+            alarmSource: '控制柜',
+            isUse: false
+          },
+          {
+            ctype: '补偿电容',
+            alarmSource: '控制柜',
+            isUse: false
+          },
+          {
+            ctype: '灯杆漏电',
+            alarmSource: '控制柜',
+            isUse: false
+          },
+          {
+            ctype: '节点丢失',
+            alarmSource: '控制柜',
+            isUse: false
+          },
+          {
+            ctype: '继电器故障',
+            alarmSource: '控制柜',
+            isUse: false
+          },
+          {
+            ctype: '灯具过流',
+            alarmSource: '控制柜',
+            isUse: false
+          },
+          {
+            ctype: '灯具过压',
+            alarmSource: '控制柜',
+            isUse: false
+          },
+          {
+            ctype: '高温',
+            alarmSource: '控制柜',
+            isUse: false
+          },
+          {
+            ctype: '灯具寿命',
+            alarmSource: '控制柜',
+            isUse: false
+          },
+          {
+            ctype: '检修口门',
+            alarmSource: '控制柜',
+            isUse: false
+          },
+          {
+            ctype: '灯杆倾斜',
+            alarmSource: '控制柜',
+            isUse: false
+          }
+        ],
+        selectAlarmLevel: ''
       }
     },
     methods: {
@@ -320,9 +448,9 @@
       handleOpenAlarmOk () {
         this.openAlarmVisible = false
         let temData = []
-        this.openAlarmBoxData.map((item, index) => {
+        this.alarmData.map((item, index) => {
           const obj = {
-            ctype: item.ctype,
+            ctype: index + 1,
             alarmSource: item.alarmSource,
             isUse: Number(item.isUse)
           }
@@ -332,35 +460,63 @@
           if (res.data) {
             this.$message({
               showClose: true,
-              message: '修改成功！'
+              message: '修改成功！',
+              type: 'success'
             })
             this.openAlarmVisible = false
           } else {
             this.$message({
               showClose: true,
-              message: '修改失败！'
+              message: '修改失败！',
+              type: 'warning'
             })
           }
         })
       },
-      // 是否开启警报
-      handleOpenAlara () {
+      // 设置报警信息弹框
+      handleOpenSet (type) {
         // 初始化数据todo
+        this.lightSetVisible = true
+      },
+      // 是否开启报警弹框
+      openAlarmSet (type) {
         this.openAlarmVisible = true
+        if (type) {
+          this.alarmData = this.openAlarmLightData
+        } else {
+          this.alarmData = this.openAlarmBoxData
+        }
       },
       // 意外亮灯
       handleLightOpen () {
-        getAlarm().then(res => {
-          console.log(res, '请求的初始化配置数据')
-        })
-        this.lightOpenVisible = true
+        // getAlarm().then(res => {
+        //   console.log(res, '请求的初始化配置数据')
+        // })
+        // this.lightOpenVisible = true
       },
       // 配置保存数据
       handleAlarmConfigSave () {
-        this.lightOpenVisible = false
-      },
-      tabHandleClick (tab, event) {
-        console.log(tab, event)
+        // this.lightOpenVisible = false
+        this.alermConfigData.isNoticeMap = +this.alermConfigData.isNoticeMap
+        this.alermConfigData.isNoticeSms = +this.alermConfigData.isNoticeSms
+        this.alermConfigData.isNoticeEmail = +this.alermConfigData.isNoticeEmail
+        this.alermConfigData.isNoticeWeixin = +this.alermConfigData.isNoticeWeixin
+        configAlarm(this.alermConfigData).then(res => {
+          if (res.header.code === 1000) {
+            this.$message({
+              showClose: true,
+              message: '设置成功！',
+              type: 'success'
+            })
+          } else {
+            this.$message({
+              showClose: true,
+              message: '修改失败！',
+              type: 'warning'
+            })
+          }
+          this.lightSetVisible = false
+        })
       }
     },
     created () {
@@ -749,6 +905,10 @@
   }
 
   #ele-warning {
+    padding: 32px;
+  }
+
+  #light-warning {
     padding: 32px;
   }
 

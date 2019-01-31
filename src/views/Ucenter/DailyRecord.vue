@@ -1,41 +1,7 @@
 <template>
   <div class="system-container">
-    <div class="system-top clearfix">
-      <!-- <div class="item-block f-l">
-        <span class="title">项目</span>
-        <el-select v-model="value" placeholder="请选择">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
-      </div> -->
+    <div class="top clearfix">
       <div class="item-block f-l">
-        <span class="title">类型</span>
-        <el-select v-model="searchObj.operationType" placeholder="请选择">
-          <!-- <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option> -->
-        </el-select>
-      </div>
-      <!-- <div class="item-block f-l">
-        <span class="title">包含</span>
-        <el-select v-model="value" placeholder="请选择">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
-      </div> -->
-      <div class="item-block f-l">
-        <span class="title">日期</span>
         <el-date-picker
           style="width:350px"
           v-model="selectTime"
@@ -43,14 +9,24 @@
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
-          :picker-options="pickerOptions0">
+          :picker-options="pickerOptions">
         </el-date-picker>
       </div>
       <div class="item-block f-l">
-        <span class="title">内容</span>
-        <el-input v-model="searchObj.content" placeholder="请输入内容"></el-input>
+        <div class="f-l">
+          <el-input v-model="searchObj.content" placeholder="请输入日志内容"></el-input>
+        </div>
       </div>
-      <div class="btn-block f-r">
+      <div class="item-block f-l">
+        <div class="f-l">
+          <el-select v-model="searchObj.userId" placeholder="请选择用户">
+            <el-option v-for="u in userData" :key="u.id"
+                       :label="u.userName"
+                       :value="u.id"></el-option>
+          </el-select>
+        </div>
+      </div>
+      <div class="btn-block f-l">
         <el-button @click="goSearch" type="primary">查询</el-button>
       </div>
     </div>
@@ -107,7 +83,7 @@
 </template>
 
 <script>
-  import {listUserOpLog} from '@/api/RoadLighting/userAdmin'
+  import {listUserOpLog, listUser} from '@/api/RoadLighting/userAdmin'
   import '../../utils/filter.js'
 
   export default {
@@ -122,9 +98,11 @@
         selectTime: null,
         searchObj: {
           content: '',
+          userId: '',
           operationType: ''
         },
-        pickerOptions0: {
+        userData: [],
+        pickerOptions: { // date控件转换
           disabledDate (time) {
             return time.getTime() > Date.now() - 8.64e6
           }
@@ -140,25 +118,24 @@
       handleSizeChange (val) {
         this.pageSize = val
         this.getList()
+        // 改变每页条数
       },
       selectTimeFun () {
         if (this.selectTime !== null) {
           this.searchObj.startDate = new Date(this.selectTime[0]).toString()
           this.searchObj.endDate = new Date(this.selectTime[1]).toString()
-          console.log(this.searchObj)
         }
       },
       goSearch () {
         this.getList()
       },
-      getList () {
-        let that = this
+      getList () { // 获取列表
         this.selectTimeFun()
         this.searchObj.pageNumber = this.pageNumber
         this.searchObj.pageSize = this.pageSize
         listUserOpLog(this.searchObj).then(response => {
-          that.List = response.data
-          if (that.List.length > 0) {
+          this.List = response.data
+          if (this.List.length > 0) {
             this.allTotal = response.total
           } else {
             this.allTotal = 0
@@ -169,6 +146,10 @@
       }
     },
     created () {
+      // 获取用户信息
+      listUser().then(res => {
+        this.userData = res.data || []
+      })
       this.getList()
     },
     destroyed () {
@@ -190,5 +171,13 @@
 
   .system-container .system-top .item-block {
     width: initial;
+  }
+
+  .top {
+    padding: 20px 0 0;
+
+    > div {
+      margin-left: 20px;
+    }
   }
 </style>

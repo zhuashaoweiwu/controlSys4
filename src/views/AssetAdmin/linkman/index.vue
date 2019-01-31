@@ -1,14 +1,14 @@
 <template>
   <div class="box">
-    <div class="seach_top">
-      <el-input placeholder="请输入内容" v-model="input5" class="input-with-select">
-        <el-button slot="append" icon="el-icon-search"></el-button>
-      </el-input>
+    <div class="search_top">
+      <el-input placeholder="请输入部门名称" v-model="department" class="input-with-select"></el-input>
+      <el-input placeholder="请输入手机号码" v-model="phoneNumber" class="input-with-select"></el-input>
+      <el-button icon="el-icon-search" @click="getListMasker"></el-button>
     </div>
     <div class="addData">
       <div>
         <el-button type="primary"
-                   @click="dialogFormVisible = true,form.maskName=form.sex=form.age=form.phoneNumber=form.email=form.place=form.nnlightctlMaskerId=form.codeNumber=form.department=''"
+                   @click="dialogFormVisible = true,addData.maskName=addData.sex=addData.age=addData.phoneNumber=addData.email=addData.place=addData.nnlightctlMaskerId=addData.codeNumber=addData.department=''"
                    icon="el-icon-plus">增加
         </el-button>
       </div>
@@ -16,15 +16,16 @@
         <el-button plain icon="el-icon-delete" @click="alldelte">批量删除</el-button>
       </div>
     </div>
+    <!--新增联系人-->
     <el-dialog title="添加联系人" :visible.sync="dialogFormVisible">
-      <el-form :model="form" style="margin:0 auto" :rules="rules" ref="form" class="demo-ruleForm">
+      <el-form :model="addData" style="margin:0 auto" :rules="rules" ref="addForm" class="demo-ruleForm">
         <el-form-item label="联系人" label-width="80px" prop="maskName">
-          <el-input v-model="form.maskName" auto-complete="off"></el-input>
+          <el-input v-model="addData.maskName" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="性别" label-width="80px">
-          <el-select v-model="Contact.sex" placeholder="请选择">
+          <el-select v-model="addData.sex" placeholder="请选择">
             <el-option
-              v-for="item in options"
+              v-for="item in sexOptions"
               :key="item.value"
               :label="item.label"
               :value="item.value">
@@ -32,41 +33,42 @@
           </el-select>
         </el-form-item>
         <el-form-item label="年龄" label-width="80px" prop="age">
-          <el-input v-model="form.age" auto-complete="off"></el-input>
+          <el-input v-model="addData.age" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="联系电话" label-width="80px">
-          <el-input v-model="form.phoneNumber" auto-complete="off"></el-input>
+          <el-input v-model="addData.phoneNumber" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="邮箱" label-width="80px" prop="email">
-          <el-input v-model="form.email" auto-complete="off"></el-input>
+          <el-input v-model="addData.email" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="职位" label-width="80px" prop="place">
-          <el-input v-model="form.place" auto-complete="off"></el-input>
+          <el-input v-model="addData.place" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="直属上级" label-width="80px" prop="nnlightctlMaskerId">
-          <el-input v-model="form.nnlightctlMaskerId" auto-complete="off"></el-input>
+          <el-input v-model="addData.nnlightctlMaskerId" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="编号" label-width="80px" prop="codeNumber">
-          <el-input v-model="form.codeNumber" auto-complete="off"></el-input>
+          <el-input v-model="addData.codeNumber" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="部门" label-width="80px" prop="department">
-          <el-input v-model="form.department" auto-complete="off"></el-input>
+          <el-input v-model="addData.department" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="linkmanAdd('form')">确 定</el-button>
+        <el-button type="primary" @click="linkmanUpdate(0)">确 定</el-button>
       </div>
     </el-dialog>
+    <!--编辑联系人-->
     <el-dialog title="编辑联系人" :visible.sync="dialogFormVisible2">
       <el-form :model="Contact" style="margin:0 auto" :rules="rules" ref="Contact" class="demo-ruleForm">
         <el-form-item label="联系人" label-width="80px" prop="maskName">
           <el-input v-model="Contact.maskName" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="性别" label-width="80px">
+        <el-form-item label="性别" label-width="80px" prop="sex">
           <el-select v-model="Contact.sex" placeholder="请选择">
             <el-option
-              v-for="item in options"
+              v-for="item in sexOptions"
               :key="item.value"
               :label="item.label"
               :value="item.value">
@@ -97,14 +99,14 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="linkmanContact('Contact')">确 定</el-button>
+        <el-button type="primary" @click="linkmanUpdate(1)">确 定</el-button>
       </div>
     </el-dialog>
     <div class="table">
       <template>
         <el-table
           ref="multipleTable"
-          :data="tableData3"
+          :data="listMaskerData"
           tooltip-effect="dark"
           style="width: 100%"
           @selection-change="handleSelectionChange">
@@ -175,11 +177,11 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="currentPage"
-        :page-sizes="[100, 200, 300, 400]"
-        :page-size="100"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="400">
+        :current-page="pageNumber"
+        :page-sizes="[10, 50, 100]"
+        :page-size="pageSize"
+        :total="listTotal"
+        layout="total, sizes, prev, pager, next, jumper">
       </el-pagination>
     </div>
   </div>
@@ -198,12 +200,15 @@
     name: 'linkman',
     data () {
       return {
-        input5: '',
-        currentPage: 1,
+        pageNumber: 1,
+        pageSize: 10,
+        department: '',
+        phoneNumber: '',
         dialogTableVisible: false,
         dialogFormVisible: false,
         dialogFormVisible2: false,
-        form: {
+        multipleSelection: [],
+        addData: {
           maskName: '',
           sex: '',
           age: '',
@@ -225,13 +230,12 @@
           codeNumber: '',
           department: ''
         },
-        formLabelWidth: '120px',
-        tableData3: [],
-        options: [{
-          value: '1',
+        listMaskerData: [],
+        sexOptions: [{
+          value: 1,
           label: '男'
         }, {
-          value: '0',
+          value: 0,
           label: '女'
         }],
         rules: {
@@ -248,101 +252,95 @@
             {required: true, message: '请输入邮箱地址', trigger: 'blur'},
             {type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change']}
           ]
-        }
+        },
+        listTotal: 0
       }
     },
     created () {
-      listMasker().then(res => {
-        for (var i = 0; i < res.data.length; i++) {
-          if (res.data[i].sex === 0) {
-            res.data[i].sex = '女'
-          } else {
-            res.data[i].sex = '男'
-          }
-        }
-        this.tableData3 = res.data
-      })
+      this.getListMasker()
     },
     methods: {
+      getListMasker () {
+        // listMasker(this.pageNumber, this.pageSize, this.department, this.phoneNumber).then(res => {  // 后台未更新模糊查询为空
+        listMasker(this.pageNumber, this.pageSize).then(res => {
+          res.data.length && res.data.forEach(d => {
+              d.sex === 0 ? d.sex = '女' : d.sex = '男'
+            }
+          )
+          this.listMaskerData = res.data
+          this.listTotal = res.total
+        })
+      },
       alldelte () {
-        var that = this
-        var a = []
-        for (var i = 0; i < this.multipleSelection.length; i++) {
-          a.push(this.multipleSelection[i].id)
+        let ids = []
+        if (this.multipleSelection.length) {
+          this.multipleSelection.forEach(d => {
+            ids.push(d.id)
+          })
+        } else {
+          this.$message({
+            type: 'default',
+            message: '请至少选择一条数据！'
+          })
+          return
         }
-        deleteMasker(a).then(res => {
-          that.$message({
+        deleteMasker(ids).then(res => {
+          this.$message({
             type: 'success',
             message: '删除成功'
           })
-          listMasker().then(res => {
-            that.tableData3 = res.data
-          })
+          this.getListMasker()
         })
       },
       handleSelectionChange (val) {
         this.multipleSelection = val
       },
       handleEdit (index, row) {
-        // console.log(index, row.id,row);
-        var that = this
         getMasker(row.id).then(res => {
-          for (var i = 0; i < res.data.length; i++) {
-            if (res.data[i].sex === 0) {
-              res.data[i].sex = '女'
-            } else {
-              res.data[i].sex = '男'
-            }
-          }
-          that.Contact = res.data[0]
+          this.Contact = res.data[0]
         })
 
         this.dialogFormVisible2 = true
       },
       handleDelete (index, row) {
         // console.log(index, row);
-        var a = []
-        a.push(row.id)
-        var that = this
-        deleteMasker(a).then(res => {
-          that.$message({
+        deleteMasker(row.id).then(res => {
+          this.$message({
             type: 'success',
             message: '删除成功'
           })
-          listMasker().then(res => {
-            that.tableData3 = res.data
-          })
+          this.getListMasker()
         })
       },
       handleSizeChange (val) {
-        console.log(`每页 ${val} 条`)
+        this.pageSize = val
+        this.getListMasker()
       },
       handleCurrentChange (val) {
-        console.log(`当前页: ${val}`)
+        this.pageNumber = val
+        this.getListMasker()
       },
-      linkmanAdd (formName) {
+      linkmanUpdate (type) {
         //   console.log(this.form)
-        console.log(this.Contact.sex)
-        var that = this
-        this.$refs[formName].validate((valid) => {
+        let obj = this.addData
+        if (type) {
+          obj = this.Contact
+        }
+        if (!isvalidPhone(obj.phoneNumber)) {
+          this.$message({
+            type: 'default',
+            message: '请输入正确的手机号码！'
+          })
+        }
+        this.$refs.addForm.validate((valid) => {
           if (valid) {
-            addOrUpdateMasker(that.form.maskName, Number(that.form.sex), Number(that.form.age), Number(that.form.phoneNumber), that.form.email, that.form.place, that.form.nnlightctlMaskerId, that.form.codeNumber, that.form.department).then(res => {
-              that.$message({
+            addOrUpdateMasker(obj).then(res => {
+              this.$message({
                 type: 'success',
-                message: '添加成功'
+                message: '操作成功'
               })
               this.dialogFormVisible = false
-              // that.tableData3.push(that.form)
-              listMasker().then(res => {
-                for (var i = 0; i < res.data.length; i++) {
-                  if (res.data[i].sex === 0) {
-                    res.data[i].sex = '女'
-                  } else {
-                    res.data[i].sex = '男'
-                  }
-                }
-                this.tableData3 = res.data
-              })
+              this.getListMasker()
             })
           } else {
             return false
@@ -361,16 +359,7 @@
               })
               this.dialogFormVisible2 = false
               // that.tableData3.push(that.form)
-              listMasker().then(res => {
-                for (var i = 0; i < res.data.length; i++) {
-                  if (res.data[i].sex === 0) {
-                    res.data[i].sex = '女'
-                  } else {
-                    res.data[i].sex = '男'
-                  }
-                }
-                this.tableData3 = res.data
-              })
+              this.getListMasker()
             })
           } else {
             return false
@@ -398,15 +387,20 @@
     }
   }
 </script>
-<style scoped>
+<style scoped lang="scss">
   .box {
     width: 98%;
     margin: 0 auto;
   }
 
-  .seach_top {
-    width: 300px;
+  .search_top {
     margin-top: 20px;
+
+    > div {
+      width: 300px;
+      float: left;
+      margin-right: 20px;
+    }
   }
 
   .addData {

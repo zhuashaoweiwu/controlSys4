@@ -33,8 +33,11 @@
     </div>
     <div id="dataTable">
       <div class="operator">
-        <el-button type="primary" icon="el-icon-delete" @click="handleDeletAlarm()" :disabled="!selectIds.length">清理警报</el-button>
-        <el-button type="primary" icon="el-icon-download" @click="handleImportAlarm()">导入</el-button>
+        <el-button type="primary" icon="el-icon-delete" @click="handleDeletAlarm()" :disabled="!selectIds.length">清理警报
+        </el-button>
+        <el-button type="primary" icon="el-icon-download" @click="handleImportAlarm()" :disabled="!selectIds.length">
+          导出实时报警
+        </el-button>
       </div>
       <el-table
         :data="tableData"
@@ -185,7 +188,7 @@
 </template>
 
 <script>
-  import {getListAlarm, getAlarm, clearAlarm} from '@/api/EventWarning/EventWarning'
+  import {getListAlarm, getAlarm, clearAlarm, exportAlarm} from '@/api/EventWarning/EventWarning'
   import moment from 'moment'
   import '../../../../utils/filter.js'
 
@@ -271,9 +274,13 @@
           })
         })
       },
-      // 导入信息
+      // 导出信息
       handleImportAlarm () {
-        console.log('导入信息')
+        let alarmIds = []
+        if (this.selectIds) {
+          alarmIds = this.selectIds
+        }
+        exportAlarm(alarmIds)
       },
       // 时间格式化
       dateFormat: function (row, column) {

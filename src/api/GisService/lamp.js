@@ -13,13 +13,11 @@ import request from '@/utils/request'
  * @param {*} projectId 项目id
  * @returns
  */
-export function listElebox (projectId, pageNumber, pageSize) {
+export function listElebox (projectId) {
   return request({
     url: '/api/gis/listElebox',
-    method: 'get',
-    params: {
-      pageNumber,
-      pageSize,
+    method: 'post',
+    data: {
       projectId
     }
   })
@@ -51,8 +49,8 @@ export function listLighting (projectId) {
 export function listLightGroup (pageNumber, pageSize) {
   return request({
     url: '/api/lightGroup/listLightGroup',
-    method: 'get',
-    params: {
+    method: 'POST',
+    data: {
       pageNumber,
       pageSize
     }
@@ -67,15 +65,11 @@ export function listLightGroup (pageNumber, pageSize) {
  * @param {*} lightIds 要添加到分组中的灯具的ID值的集合
  * @returns
  */
-export function createLightGroupByLightIds (cGroupName, mem, lightIds) {
+export function createLightGroupByLightIds (obj) {
   return request({
     url: '/api/lightGroup/createLightGroupByLightIds',
-    method: 'get',
-    params: {
-      cGroupName,
-      mem,
-      lightIds
-    }
+    method: 'POST',
+    data: obj
   })
 }
 
@@ -90,8 +84,8 @@ export function createLightGroupByLightIds (cGroupName, mem, lightIds) {
 export function createLightGroupByLightUIDs (cGroupName, mem, lightUIDs) {
   return request({
     url: '/api/lightGroup/createLightGroupByLightUIDs',
-    method: 'get',
-    params: {
+    method: 'post',
+    data: {
       cGroupName,
       mem,
       lightUIDs
@@ -107,15 +101,43 @@ export function createLightGroupByLightUIDs (cGroupName, mem, lightUIDs) {
  * @param {*} lightGroupIds 要添加到分组中的灯具分组的UD集合
  * @returns
  */
-export function createLightGroupByLightGroup (cGroupName, mem, lightGroupIds) {
+export function createLightGroupByLightGroup (obj) {
   return request({
     url: '/api/lightGroup/createLightGroupByLightGroup',
-    method: 'get',
-    params: {
-      cGroupName,
-      mem,
-      lightGroupIds
-    }
+    method: 'post',
+    data: obj
+  })
+}
+
+/**
+ * 编辑按灯具id形式新建的灯具分组
+ * @export
+ * @param {*} cGroupName 灯具分组名称
+ * @param {*} mem 备注
+ * @param {*} lightGroupIds 要添加到分组中的灯具分组的UD集合
+ * @returns
+ */
+export function updateLightGroupFromLight (obj) {
+  return request({
+    url: '/api/lightGroup/updateLightGroupFromLight',
+    method: 'post',
+    data: obj
+  })
+}
+
+/**
+ * 编辑按灯具分组组合形式新建的灯具分组
+ * @export
+ * @param {*} cGroupName 灯具分组名称
+ * @param {*} mem 备注
+ * @param {*} lightGroupIds 要添加到分组中的灯具分组的UD集合
+ * @returns
+ */
+export function updateLightGroupFromLightGroup (obj) {
+  return request({
+    url: '/api/lightGroup/updateLightGroupFromLightGroup',
+    method: 'post',
+    data: obj
   })
 }
 
@@ -128,8 +150,22 @@ export function createLightGroupByLightGroup (cGroupName, mem, lightGroupIds) {
 export function addOrUpdateSwitchTask (obj) {
   return request({
     url: '/api/switchTask/addOrUpdateSwitchTask',
-    method: 'get',
-    params: obj
+    method: 'post',
+    data: obj
+  })
+}
+
+/**
+ * 7、通过id值获取单个任务开关
+ * @export
+ * @param {*} id
+ * @returns
+ */
+export function getSwitchTask (id) {
+  return request({
+    url: '/api/switchTask/getSimpleSwitchTask',
+    method: 'post',
+    data: {id}
   })
 }
 
@@ -143,8 +179,8 @@ export function addOrUpdateSwitchTask (obj) {
 export function listSwitchTask (pageNumber, pageSize) {
   return request({
     url: '/api/switchTask/listSwitchTask',
-    method: 'get',
-    params: {
+    method: 'post',
+    data: {
       pageNumber,
       pageSize
     }
@@ -175,8 +211,8 @@ export function getSimpleSwitchTask (id) {
 export function deleteSwitchTask (switchTaskIds) {
   return request({
     url: '/api/switchTask/deleteSwitchTask',
-    method: 'get',
-    params: switchTaskIds
+    method: 'post',
+    data: {switchTaskIds}
   })
 }
 
@@ -189,8 +225,8 @@ export function deleteSwitchTask (switchTaskIds) {
 export function addOrUpdateScene (obj) {
   return request({
     url: '/api/scene/addOrUpdateScene',
-    method: 'get',
-    params: obj
+    method: 'post',
+    data: obj
   })
 }
 
@@ -201,13 +237,14 @@ export function addOrUpdateScene (obj) {
  * @param {*} pageSize
  * @returns
  */
-export function listScene (pageNumber, pageSize) {
+export function listScene (pageNumber, pageSize, sceneName) {
   return request({
     url: '/api/scene/listScene',
-    method: 'get',
-    params: {
+    method: 'post',
+    data: {
       pageNumber,
-      pageSize
+      pageSize,
+      sceneName
     }
   })
 }
@@ -221,8 +258,8 @@ export function listScene (pageNumber, pageSize) {
 export function getScene (id) {
   return request({
     url: '/api/scene/getScene',
-    method: 'get',
-    params: id
+    method: 'post',
+    data: {id}
   })
 }
 
@@ -235,8 +272,21 @@ export function getScene (id) {
 export function deleteScene (sceneIds) {
   return request({
     url: '/api/scene/deleteScene',
-    method: 'get',
-    params: sceneIds
+    method: 'post',
+    data: {sceneIds}
+  })
+}
+
+/**
+ * 获取全部场景映射
+ * @export
+ * @param {*}
+ * @returns
+ */
+export function listSceneShotCut () {
+  return request({
+    url: '/api/scene/listSceneShotCut',
+    method: 'post'
   })
 }
 
@@ -249,8 +299,41 @@ export function deleteScene (sceneIds) {
 export function addOrUpdateSceneShotcut (obj) {
   return request({
     url: '/api/scene/addOrUpdateSceneShotcut',
-    method: 'get',
-    params: obj
+    method: 'POST',
+    data: obj
+  })
+}
+
+/**
+ * 获取告警信息
+ * @export
+ * @param {*}
+ * @returns
+ */
+export function listAlarm (alarmSource, ctype) {
+  return request({
+    url: '/api/alarm/listAlarm',
+    method: 'post',
+    data: {
+      pageNumber: 1,
+      pageSize: 10,
+      alarmSource: alarmSource,
+      ctype: ctype
+    }
+  })
+}
+
+/**
+ * 快捷场景模式调用
+ * @export
+ * @param {*}
+ * @returns
+ */
+export function invokeSceneShotCut (shotcutName) {
+  return request({
+    url: '/api/scene/invokeSceneShotCut',
+    method: 'post',
+    data: {shotcutName}
   })
 }
 
@@ -263,8 +346,8 @@ export function addOrUpdateSceneShotcut (obj) {
 export function deleteSceneShotcut (sceneShotcutIds) {
   return request({
     url: '/api/scene/deleteSceneShotcut',
-    method: 'get',
-    params: sceneShotcutIds
+    method: 'post',
+    data: {sceneShotcutIds}
   })
 }
 
@@ -307,13 +390,11 @@ export function listLoopLighting (projectId, loopId) {
  * @param {*}
  * @returns
  */
-export function commandLightAdjust (lightPercent) {
+export function commandLightAdjust (lightIds, lightPercent) {
   return request({
-    url: '/api/command/sendLightAdjustCommand',
-    method: 'get',
-    params: {
-      lightPercent
-    }
+    url: '/api/command/sendLightAdjustCommandBatch',
+    method: 'post',
+    data: {lightIds, lightPercent}
   })
 }
 

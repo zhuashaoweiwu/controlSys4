@@ -4,17 +4,6 @@
       <el-tab-pane label="控制柜GIS" name="boxGIS"></el-tab-pane>
       <el-tab-pane label="灯具GIS" name="lightGIS"></el-tab-pane>
     </el-tabs>
-    <div class="system-top clearfix">
-      <div class="item-block f-l">
-        <span class="title">xxx</span><el-input  placeholder="请输入内容"></el-input>
-      </div>
-      <div class="item-block f-l">
-        <span class="title">xx</span><el-input  placeholder="请输入内容"></el-input>
-      </div>
-      <div class="btn-block f-r">
-        <el-button type="primary">查询</el-button>
-      </div>
-    </div>
     <div class="system-center">
       <div class="operation-bar">
         <el-button @click="addBlock()" type="primary">增加GIS</el-button>
@@ -154,7 +143,6 @@ export default {
   },
   watch: {
     activeName: function (val, oldVal) {
-      console.log(val)
       this.pageNumber = 1
       this.pageSize = 10
       if (val === 'boxGIS') {
@@ -162,6 +150,7 @@ export default {
       } else {
         this.type = 0
       }
+      console.log(this.type)
       this.getList()
     }
   },
@@ -183,10 +172,9 @@ export default {
       this.getList()
     },
     getList () {
-      let that = this
-      listGIS(that.pageNumber, that.pageSize, that.type).then(response => {
-        that.List = response.data
-        if (that.List.length > 0) {
+      listGIS(this.pageNumber, this.pageSize, this.type).then(response => {
+        this.List = response.data
+        if (this.List.length > 0) {
           this.allTotal = response.total
         } else {
           this.allTotal = 0
@@ -216,9 +204,10 @@ export default {
             message: '请勾选需要删除的数据',
             type: 'warning'
           })
+          return
         }
       }
-      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+      this.$confirm('此操作将永久删除, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -281,8 +270,6 @@ export default {
   },
   created () {
     this.getList()
-  },
-  destroyed () {
   }
 }
 </script>

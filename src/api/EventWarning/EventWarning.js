@@ -1,6 +1,9 @@
 // 事件报警API
 
 import request from '@/utils/request'
+import qs from 'qs'
+import axios from 'axios'
+import Vue from 'vue'
 
 /**
  * 1、获取实时报警数据
@@ -45,13 +48,18 @@ export function getAlarm () {
  *
  * @returns
  */
-export function exportAlarm (alarmIds) {
-  return request({
-    url: '/api/alarm/exportAlarm',
-    method: 'get',
-    params: {
-      alarmIds: alarmIds
-    }
+
+export function exportAlarm (param) {
+  let params = qs.stringify(param, {allowDots: true})
+  axios.post(Vue.conf.api.exportAlarm, params, {
+    ContentType: 'application/x-www-form-urlencoded',
+    responseType: 'arraybuffer'
+  }).then((res) => {
+    console.log(res)
+    let blob = new Blob([res.data], {type: 'application/vnd.ms-excel'})
+    let objectUrl = URL.createObjectURL(blob)
+    window.location.href = objectUrl
+  }).catch(function (res) {
   })
 }
 
@@ -59,7 +67,6 @@ export function exportAlarm (alarmIds) {
  * 4、清理实时报警信息（将报警状态置为“已失效”，并生成一条历史报警记录）
  * @export
  * @param {*} List<Long> alarmIds -- 要清理的报警信息id值的集合
-
  *
  * @returns
  */
@@ -120,13 +127,18 @@ export function clearAlarmHistory (alarmHistoryIds) {
  *
  * @returns
  */
-export function exportAlarmHistory (alarmHistoryIds) {
-  return request({
-    url: '/api/alarm/exportAlarmHistory',
-    method: 'get',
-    params: {
-      alarmHistoryIds: alarmHistoryIds
-    }
+
+export function exportAlarmHistory (param) {
+  let params = qs.stringify(param, {allowDots: true})
+  axios.post(Vue.conf.api.exportAlarmHistory, params, {
+    ContentType: 'application/x-www-form-urlencoded',
+    responseType: 'arraybuffer'
+  }).then((res) => {
+    console.log(res)
+    let blob = new Blob([res.data], {type: 'application/vnd.ms-excel'})
+    let objectUrl = URL.createObjectURL(blob)
+    window.location.href = objectUrl
+  }).catch(function (res) {
   })
 }
 
@@ -154,18 +166,18 @@ export function exportAlarmHistory (alarmHistoryIds) {
 export function configAlarm (configAlarm) {
   return request({
     url: '/api/alarm/configAlarm',
-    method: 'get',
-    params: configAlarm
+    method: 'post',
+    data: configAlarm
   })
 }
 
 /**
  * 9. 是否开启警报设置
  */
-export function configIsUseAlarm (configAlarm) {
+export function configIsUseAlarm (alarmRequestList) {
   return request({
     url: '/api/alarm/configIsUseAlarm',
-    method: 'get',
-    params: configAlarm
+    method: 'POST',
+    data: {alarmRequestList}
   })
 }

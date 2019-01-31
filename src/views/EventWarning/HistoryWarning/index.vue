@@ -28,7 +28,12 @@
     </div>
     <div id="dataTable">
       <div class="operator">
-        <el-button type="primary" icon="el-icon-delete" @click="clearAlarmHistory" :disabled="!selectIds.length">清理历史报警</el-button>
+        <el-button type="primary" icon="el-icon-delete" @click="clearAlarmHistory" :disabled="!selectIds.length">
+          清理历史报警
+        </el-button>
+        <el-button type="primary" icon="el-icon-download" @click="handleImportAlarm()" :disabled="!selectIds.length">
+          导出历史报警
+        </el-button>
       </div>
       <el-table
         :data="tableData"
@@ -107,7 +112,7 @@
 </template>
 
 <script>
-  import {listAlarmHistory, clearAlarmHistory} from '@/api/EventWarning/EventWarning'
+  import {listAlarmHistory, clearAlarmHistory, exportAlarmHistory} from '@/api/EventWarning/EventWarning'
   import '../../../utils/filter.js'
   import moment from 'moment'
 
@@ -183,6 +188,9 @@
             type: 'success'
           })
         })
+      },
+      handleImportAlarm () {
+        exportAlarmHistory(this.selectIds)
       },
       // 时间格式化
       dateFormat: function (row, column) {

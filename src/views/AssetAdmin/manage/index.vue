@@ -4,34 +4,12 @@
       <el-tab-pane label="未提交" name="0"></el-tab-pane>
       <el-tab-pane label="已提交" name="1"></el-tab-pane>
     </el-tabs>
-    <!--<div style="display:flex;justify-content: space-between">-->
-    <!--<div class="search">-->
-    <!--<div>-->
-    <!--<el-input v-model="input" placeholder="请输入内容"></el-input>-->
-    <!--</div>-->
-    <!--<div style="width:30px;"></div>-->
-    <!--<div class="dateChange">-->
-    <!--<div>所属配电柜</div>-->
-    <!--<div style="width:20px;"></div>-->
-    <!--<el-select v-model="value" placeholder="请选择">-->
-    <!--<el-option-->
-    <!--v-for="item in options"-->
-    <!--:key="item.value"-->
-    <!--:label="item.label"-->
-    <!--:value="item.value">-->
-    <!--</el-option>-->
-    <!--</el-select>-->
-    <!--</div>-->
-    <!--</div>-->
-    <!--<div>-->
-    <!--<el-button type="primary">查询</el-button>-->
-    <!--</div>-->
-    <!--</div>-->
     <div class="buttonList">
       <el-button type="primary" icon="el-icon-plus" @click="dialogAdd = true">增加</el-button>
       <el-button type="primary" plain icon="el-icon-delete" @click="alldelte">批量删除</el-button>
-      <el-button type="primary" plain icon="el-icon-setting" @click="setBtn">设置</el-button>
-      <el-button type="primary" plain icon="el-icon-check" @click="updatacommitRepairRecord">提交</el-button>
+      <el-button type="primary" plain icon="el-icon-setting" @click="setBtn" v-if="activeName==0">设置</el-button>
+      <el-button type="primary" plain icon="el-icon-check" @click="updatacommitRepairRecord" v-if="activeName==0">提交
+      </el-button>
     </div>
     <template>
       <el-table
@@ -122,7 +100,14 @@
           <el-input v-model="addData.nnlightctlUserId" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="资产目录" label-width="100px" prop="nnlightctlPropertyClassifyCatalogId">
-          <el-input v-model="addData.nnlightctlPropertyClassifyCatalogId" auto-complete="off"></el-input>
+          <el-select v-model="addData.nnlightctlPropertyClassifyCatalogId" placeholder="请选择" auto-complete="off">
+            <el-option
+              v-for="item in catalogSelect"
+              :key="item.id"
+              :label="item.myCatalogName"
+              :value="item.id">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="状态" label-width="100px" prop="isCommit">
           <el-select v-model="addData.isCommit" placeholder="请选择" auto-complete="off">
@@ -135,44 +120,59 @@
           </el-select>
         </el-form-item>
         <el-form-item label="所属控制柜" label-width="100px" prop="nnlightctlEleboxId">
-          <el-input v-model="addData.nnlightctlEleboxId" auto-complete="off"></el-input>
+          <el-select v-model="addData.nnlightctlEleboxId" placeholder="请选择" auto-complete="off">
+            <el-option
+              v-for="item in eleBoxSelect"
+              :key="item.id"
+              :label="item.codeNumber"
+              :value="item.id">
+            </el-option>
+          </el-select>
+          <span> * 可不选</span>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogAdd = false">取 消</el-button>
-        <el-button type="primary" @click="updateRepairRecord">确 定</el-button>
+        <el-button type="primary" @click="updateRepairRecord(0)">确 定</el-button>
       </div>
     </el-dialog>
     <!-- 编辑 -->
     <el-dialog title="编辑资产" :visible.sync="dialogEdit">
       <el-form :model="editData" style="margin:0 auto" ref="editData" class="demo-ruleaddData">
-        <el-form-item label="资产名称" label-width="100px">
+        <el-form-item label="资产名称" label-width="100px" prop="propertyName">
           <el-input v-model="editData.propertyName" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="资产数量" label-width="100px">
+        <el-form-item label="资产数量" label-width="100px" prop="propertyCount">
           <el-input v-model="editData.propertyCount" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="故障日期" label-width="100px">
+        <el-form-item label="故障日期" label-width="100px" prop="faultDate">
           <el-date-picker
             v-model="editData.faultDate"
             type="date"
             placeholder="选择日期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="创建日期" label-width="100px">
+        <el-form-item label="创建日期" label-width="100px" prop="createDate">
           <el-date-picker
             v-model="editData.createDate"
             type="date"
             placeholder="选择日期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="创建人" label-width="100px">
+        <el-form-item label="创建人" label-width="100px" prop="nnlightctlUserId">
           <el-input v-model="editData.nnlightctlUserId" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="资产目录" label-width="100px">
-          <el-input v-model="editData.nnlightctlPropertyClassifyCatalogId" auto-complete="off"></el-input>
+        <el-form-item label="资产目录" label-width="100px" prop="nnlightctlPropertyClassifyCatalogId">
+          <el-select v-model="editData.nnlightctlPropertyClassifyCatalogId" placeholder="请选择" auto-complete="off">
+            <el-option
+              v-for="item in catalogSelect"
+              :key="item.id"
+              :label="item.myCatalogName"
+              :value="item.id">
+            </el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="状态" label-width="100px">
+        <el-form-item label="状态" label-width="100px" prop="isCommit">
           <el-select v-model="editData.isCommit" placeholder="请选择" auto-complete="off">
             <el-option
               v-for="item in isCommit"
@@ -182,13 +182,20 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="所属控制柜" label-width="100px">
-          <el-input v-model="editData.nnlightctlEleboxId" auto-complete="off"></el-input>
+        <el-form-item label="所属控制柜" label-width="100px" prop="nnlightctlEleboxId">
+          <el-select v-model="editData.nnlightctlEleboxId" placeholder="请选择" auto-complete="off">
+            <el-option
+              v-for="item in eleBoxSelect"
+              :key="item.id"
+              :label="item.codeNumber"
+              :value="item.id">
+            </el-option>
+          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogEdit = false">取 消</el-button>
-        <el-button type="primary" @click="updateRepairRecord">确 定</el-button>
+        <el-button type="primary" @click="updateRepairRecord(1)">确 定</el-button>
       </div>
     </el-dialog>
     <!--   设置定时  -->
@@ -196,9 +203,10 @@
       <el-form :model="setTimeData" style="margin:0 auto" ref="setTimeData" class="demo-ruleaddData">
         <el-form-item label="自动提交时间" label-width="100px">
           <el-date-picker
-            v-model="setTimeData.faultDate"
-            type="date"
-            placeholder="选择日期">
+            v-model="setTimeData.commitDate"
+            type="datetime"
+            :pickerOptions="pickerOptions"
+            placeholder="选择日期时间">
           </el-date-picker>
         </el-form-item>
       </el-form>
@@ -211,14 +219,18 @@
 </template>
 <script>
   import {
-    listRepairRecord,
     addOrUpdateRepairRecord,
-    deleteRepairRecord,
     changeTime,
     commitRepairRecord,
+    configAutoCommitRepairRecord,
+    deleteRepairRecord,
     getRepairRecord,
-    configAutoCommitRepairRecord
+    listPropertyClassifyCatalogLevel1,
+    listRepairRecord,
+    listSubPropertyClassifyCatalog
   } from '@/api/AssetAdmin.js'
+  import {listElebox} from '@/api/RoadLighting/deploy'
+  import moment from 'moment'
 
   export default {
     name: '',
@@ -244,9 +256,10 @@
           faultDate: '',
           createDate: '',
           nnlightctlUserId: '',
-          isCommit: ''
+          isCommit: 0
         },
         editData: {
+          id: '',
           nnlightctlEleboxId: '',
           nnlightctlPropertyClassifyCatalogId: '',
           propertyName: '',
@@ -257,7 +270,15 @@
           isCommit: ''
         },
         setTimeData: {
-          faultDate: ''
+          commitDate: ''
+        },
+        eleBoxSelect: [],
+        catalogSelect: [],
+        multipleSelection: [],
+        pickerOptions: {
+          disabledDate: function (val) {
+            return !moment().isBefore(val)
+          }
         },
         rules: {
           propertyName: [
@@ -268,6 +289,20 @@
       }
     },
     created () {
+      listPropertyClassifyCatalogLevel1().then(res => {
+        res.data.forEach(d => {
+          this.catalogSelect.push(d)
+          listSubPropertyClassifyCatalog(d.id).then(res => {
+            res.data.forEach(c => {
+              this.catalogSelect.push(c)
+            })
+          })
+        })
+        console.log(this.catalogSelect)
+      })
+      listElebox().then(res => {
+        this.eleBoxSelect = res.data
+      })
       listRepairRecord(this.activeName).then(res => {
         for (var i = 0; i < res.data.length; i++) {
           res.data[i].faultDate = changeTime(res.data[i].faultDate)
@@ -298,9 +333,10 @@
         })
       },
       handleEdit (index, row) {
-        this.dialogAdd = true
+        this.dialogEdit = true
         getRepairRecord(row.id).then(res => {
           this.editData = res.data[0]
+          this.editData.id = row.id
         })
       },
       handleDelete (index, row) {
@@ -331,39 +367,57 @@
         this.multipleSelection = val
       },
       setBtn () {
-        this.dialogSetTime = true
-        var a = []
-        for (var i = 0; i < this.multipleSelection.length; i++) {
-          a.push(this.multipleSelection[i].id)
+        if (!this.multipleSelection.length) {
+          this.$message({
+            type: 'default',
+            message: '请选择至少一条数据！'
+          })
+        } else {
+          this.dialogSetTime = true
         }
       },
       configAutoCommitRepairRecord () {
-        var that = this
-        var a = []
-        for (var i = 0; i < this.multipleSelection.length; i++) {
-          a.push(this.multipleSelection[i].id)
-        }
-        var faultDate
-        var d = new Date(that.setTimeData.faultDate)
-        faultDate = d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds()
-        console.log(faultDate)
-        configAutoCommitRepairRecord(a, faultDate).then(res => {
+        let repairRecordIds = []
+        this.multipleSelection.forEach(d => {
+          repairRecordIds.push(d.id)
+        })
+        let commitDate = moment(moment(this.setTimeData.commitDate).format('YYYY-MM-DD HH:mm')).toString()
+        configAutoCommitRepairRecord(repairRecordIds, commitDate).then(res => {
           // console.log(res.data)
-          that.$message({
+          this.$message({
             type: 'success',
             message: '设置成功'
           })
-          that.dialogSetTime = false
+          this.dialogSetTime = false
+          listRepairRecord(this.activeName).then(res => {
+            for (var i = 0; i < res.data.length; i++) {
+              res.data[i].faultDate = changeTime(res.data[i].faultDate)
+              res.data[i].createDate = changeTime(res.data[i].createDate)
+              if (res.data[i].isCommit === 0) {
+                res.data[i].isCommit = '未提交'
+              } else {
+                res.data[i].isCommit = '已提交'
+              }
+            }
+            this.repairRecord = res.data
+          })
         })
       },
       alldelte () {
-        var that = this
-        var a = []
-        for (var i = 0; i < this.multipleSelection.length; i++) {
-          a.push(this.multipleSelection[i].id)
+        let repairRecordIds = []
+        if (this.multipleSelection.length) {
+          this.multipleSelection.forEach(d => {
+            repairRecordIds.push(d.id)
+          })
+        } else {
+          this.$message({
+            type: 'default',
+            message: '请选择至少一条数据！'
+          })
+          return
         }
-        deleteRepairRecord(a).then(res => {
-          that.$message({
+        deleteRepairRecord(repairRecordIds).then(res => {
+          this.$message({
             type: 'success',
             message: '删除成功'
           })
@@ -382,14 +436,20 @@
         })
       },
       updatacommitRepairRecord () {
-        var that = this
-        var a = []
-        for (var i = 0; i < this.multipleSelection.length; i++) {
-          a.push(this.multipleSelection[i].id)
+        let repairRecordIds = []
+        if (this.multipleSelection.length) {
+          this.multipleSelection.forEach(d => {
+            repairRecordIds.push(d.id)
+          })
+        } else {
+          this.$message({
+            type: 'default',
+            message: '请选择至少一条数据！'
+          })
+          return
         }
-        console.log(a)
-        commitRepairRecord(a).then(res => {
-          that.$message({
+        commitRepairRecord(repairRecordIds).then(res => {
+          this.$message({
             type: 'success',
             message: '提交成功'
           })
@@ -403,23 +463,34 @@
                 res.data[i].isCommit = '已提交'
               }
             }
-            that.repairRecord = res.data
+            this.repairRecord = res.data
           })
         })
       },
-      updateRepairRecord () {
-        let d = new Date(this.addData.faultDate)
-        let c = new Date(this.addData.createDate)
-        let faultDate = d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds()
-        let createDate = c.getFullYear() + '/' + (c.getMonth() + 1) + '/' + c.getDate() + ' ' + c.getHours() + ':' + c.getMinutes() + ':' + c.getSeconds()
-        this.$refs[editData].validate((valid) => {
+      updateRepairRecord (type) {
+        let dom = 'addData'
+        let obj = {}
+        if (type) {
+          dom = 'editData'
+          this.editData.faultDate = moment(this.editData.faultDate).toString()
+          this.editData.createDate = moment(this.editData.createDate).toString()
+          obj = this.editData
+          delete obj.gmtCreated
+          delete obj.gmtUpdated
+        } else {
+          this.addData.faultDate = this.addData.faultDate.toString()
+          this.addData.createDate = this.addData.createDate.toString()
+          obj = this.addData
+        }
+        this.$refs[dom].validate((valid) => {
           if (valid) {
-            addOrUpdateRepairRecord(this.addData.nnlightctlEleboxId, this.addData.nnlightctlPropertyClassifyCatalogId, this.addData.propertyName, this.addData.propertyCount, faultDate, createDate, this.addData.nnlightctlUserId, Number(this.addData.isCommit)).then(res => {
+            addOrUpdateRepairRecord(obj).then(res => {
               this.$message({
                 type: 'success',
-                message: '添加成功'
+                message: '操作成功'
               })
               this.dialogAdd = false
+              this.dialogEdit = false
               // that.repairRecord.push(that.addData)
               listRepairRecord().then(res => {
                 for (var i = 0; i < res.data.length; i++) {
@@ -432,6 +503,12 @@
                   }
                 }
                 this.repairRecord = res.data
+              })
+            }).catch(res => {
+              console.log(res)
+              this.$message({
+                type: 'warning',
+                message: '修改失败'
               })
             })
           } else {

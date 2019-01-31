@@ -55,6 +55,16 @@ export function getInstitution (id) {
   })
 }
 
+export function getProjectsByInstitutionId (institutionId) {
+  return request({
+    url: '/api/institution/getProjectsByInstitutionId',
+    method: 'POST',
+    data: {
+      institutionId
+    }
+  })
+}
+
 /**
  * 删除机构
  * @export

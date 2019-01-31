@@ -2,47 +2,25 @@
   <div class="system-container">
     <div class="system-top clearfix">
       <div class="item-block f-l">
-        <span class="title">条件</span>
-        <el-select v-model="value" placeholder="请选择">
-          <!-- <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option> -->
-        </el-select>
-      </div>
-      <div class="item-block f-l">
-        <span class="title">属于</span>
-        <el-select v-model="value" placeholder="请选择">
-          <!-- <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option> -->
-        </el-select>
-      </div>
-      <div class="item-block f-l">
-        <span class="title">项目</span>
-        <el-select v-model="value" placeholder="请选择">
-          <!-- <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option> -->
+        <span class="title">所属机构</span>
+        <el-select v-model="selectInstitution" placeholder="请选择" @change="changeSelect">
+          <el-option
+            v-for="item in selectInstitutionOptions"
+            :key="item.id"
+            :label="item.institutionName"
+            :value="item.id">
+          </el-option>
         </el-select>
       </div>
       <div class="btn-block f-r">
-        <el-button type="primary">查询</el-button>
+        <el-button type="primary" @click="getProjectsByInstitutionId">查询</el-button>
       </div>
     </div>
     <div class="system-center">
       <div class="data-list">
         <el-table
           ref="multipleTable"
-          :data="List"
+          :data="projectList"
           tooltip-effect="dark"
           style="width: 100%"
           header-row-class-name="datalist-header">
@@ -58,8 +36,8 @@
             width="100">
           </el-table-column>
           <el-table-column
-            prop="provinceName"
-            label="授权用户"
+            prop="state"
+            label="项目状态"
             width="100">
           </el-table-column>
           <el-table-column
@@ -77,7 +55,7 @@
           :page-sizes="[10, 20, 50, 100]"
           :page-size="pageSize"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="allTotal">
+          :total="listTotal">
         </el-pagination>
       </div>
     </div>
@@ -85,6 +63,8 @@
 </template>
 
 <script>
+  import {listInstitution, getProjectsByInstitutionId} from '../../../api/RoadLighting/userAdmin'
+
   export default {
     name: 'organization',
     data () {
@@ -92,9 +72,10 @@
         pageNumber: 1,
         pageSize: 10,
         currentPage: 1,
-        allTotal: null,
-        List: [],
-        value: ''
+        selectInstitution: '',
+        selectInstitutionOptions: [],
+        projectList: [],
+        listTotal: 0
       }
     },
     methods: {
@@ -104,9 +85,25 @@
       },
       handleSizeChange (val) {
         this.pageSize = val
+      },
+      changeSelect (val) {
+        this.selectInstitution = val
+        console.log(val)
+      },
+      getProjectsByInstitutionId () {
+        getProjectsByInstitutionId(this.selectInstitution).then(res => {
+          res.data.forEach(d => {
+            d.state = d.state ? '已启用' : '未启用'
+          })
+          this.projectList = res.data
+          this.listTotal = res.total
+        })
       }
     },
     created () {
+      listInstitution().then(res => {
+        this.selectInstitutionOptions = res.data
+      })
     },
     destroyed () {
     }
