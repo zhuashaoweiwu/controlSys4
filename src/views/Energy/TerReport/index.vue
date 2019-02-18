@@ -112,7 +112,7 @@
         this.selectIds = ids
         this.listLightAvgVoltage()
       },
-      listLightAvgVoltage () {
+      listLightAvgVoltage () { // 获取灯具电压
         listLightAvgVoltage(this.selectIds, this.selectDate[0].toString(), this.selectDate[1].toString()).then(res => {
           this.voltageElectric = res.data
           res.data.length && res.data.forEach(d => {
@@ -131,9 +131,6 @@
           })
         })
       }
-    },
-    mounted () {
-      // 初始化电压
     },
     created () {
       listLightGroup().then(res => {

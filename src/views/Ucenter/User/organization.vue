@@ -7,10 +7,6 @@
       <el-input placeholder="请输入要搜索的机构地址" class="input-with-select" v-model="institutionAddr" clearable
                 @clear="getListInstitution">
       </el-input>
-      <!--<el-button slot="append" type="primary" icon="el-icon-search" @click="searchInstitutionByNameAddr"></el-button>-->
-      <!-- <div class="btn-block f-r">
-        <el-button type="primary">查询</el-button>
-      </div> -->
     </div>
     <div class="system-center">
       <div class="operation-bar">
@@ -194,6 +190,7 @@
       }
     },
     methods: {
+      // 获取机构列表
       getListInstitution () {
         let that = this
         listInstitution(that.pageNumber, that.pageSize, that.institutionName, that.institutionAddr).then(response => {
@@ -247,7 +244,7 @@
           this.newObject.institutionLevel = 1
         }
       },
-      addOrUpdateInstitution () {
+      addOrUpdateInstitution () { // 新增或者修改机构
         let postData = {}
         if (this.newObject.id) {
           postData.nnlightctlInstitutionIdParent = this.newObject.nnlightctlInstitutionIdParent

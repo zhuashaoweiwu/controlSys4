@@ -28,7 +28,7 @@
           <div class="grid-content bg-purple" id="mainEcharts" :style="{width:'663px',height:'572px'}"></div>
         </el-col>
         <el-col :span="9">
-          <div class="grid-content bg-purple-light" id="mainEchartsBing1" :style="{width:'356px',height:'278px'}"></div>
+          <div class="grid-content bg-purple-light" id="mainEchartsBing" :style="{width:'356px',height:'278px'}"></div>
           <div class="grid-content bg-purple-light" id="mainEchartsDayMonth"
                :style="{width:'356px',height:'278px'}"></div>
         </el-col>
@@ -40,14 +40,13 @@
 <script>
   import echarts from 'echarts'
   import {getCommonEnergyStatistic, listEnergyStatisticByDay} from '@/api/EnergyAnalyze/energyanalyze'
-  // 基于准备好的dom，初始化echarts实例
-
   export default {
     name: 'EnergyAnalyze',
     data () {
       return {
         keyss: true,
         energyConsume: [{totalEnergy: 0}, {totalEnergy: 0}, {totalEnergy: 0}],
+        // 图表配置项
         curMonthechartsOption: {
           title: {
             text: '月能耗'
@@ -202,14 +201,12 @@
         }
       }
     },
-
     created () {
-      let that = this
       // 组件创建成功拉取数据
-      that.$nextTick(function () {
+      this.$nextTick(function () {
         getCommonEnergyStatistic().then(res => {
           console.log(res)
-          that.energyConsume = res.data ? res.data : [{total: '暂无数据'}, {total: '暂无数据'}, {total: '暂无数据'}]
+          this.energyConsume = res.data ? res.data : [{total: '暂无数据'}, {total: '暂无数据'}, {total: '暂无数据'}]
           // 处理饼状图
           let temBingData = [
             {
@@ -232,28 +229,22 @@
             }
           ]
           // 初始化异步数据
-          that.monthYearRateOptions.series[0].data = temBingData
-          that.dayMonthRateOptions.series[0].data = temBingDayMonthData
+          this.monthYearRateOptions.series[0].data = temBingData
+          this.dayMonthRateOptions.series[0].data = temBingDayMonthData
           // 重新渲染饼状图
-          let myChartBing1 = echarts.init(document.getElementById('mainEchartsBing1'))
+          let myChartBing1 = echarts.init(document.getElementById('mainEchartsBing'))
           let myChartBing2 = echarts.init(document.getElementById('mainEchartsDayMonth'))
           myChartBing1.setOption(this.monthYearRateOptions)
           myChartBing2.setOption(this.dayMonthRateOptions)
         })
         let date = new Date()
         let curMonth = date.getMonth() + 1
-        // console.log(curMonth, '当前月份')
         listEnergyStatisticByDay(curMonth).then(res => {
-          // console.log(res, '月份的数据')
-          // that.echartsOption.series[0]['data'][i] = 1
           let curMonthxData = []
           let curMonthxTotal = []
           if (res.data) {
-            // 数据二次处理：
             let curMtolDay = date.getDate()
-            // console.log(curMtolDay)
             let comArr = []
-            // console.log(date.getMonth(), '当前月份')
             let curM = (date.getMonth() + 1) >= 10 ? date.getMonth() + 1 : `0${date.getMonth() + 1}`
             for (var d = 1; d <= curMtolDay; d++) {
               let dateString = d < 10 ? `${date.getFullYear()}-${curM}-0${d}` : `${date.getFullYear()}-${curM}-${d}`
@@ -265,7 +256,6 @@
                   date: dateString,
                   total: 0
                 }
-                // console.log('无数据')
                 comArr.push(dayData1)
               } else {
                 let dayData = res.data.filter((item, index) => { // 无数据
@@ -274,8 +264,6 @@
                 comArr.push(dayData[0])
               }
             }
-            // console.log(comArr, '处理过之后的数组')
-            // console.log(curMtolDay, '月初到当前天数')
             curMonthxData = comArr.map((item, index) => {
               let reg = /^(\d{4})-([\s\S]+)$/g
               reg.test(item.date)
@@ -285,22 +273,21 @@
             curMonthxTotal = comArr.map((item, index) => {
               return item.energy / 1000
             })
-            that.curMonthechartsOption.xAxis[0].data = curMonthxData
-            that.curMonthechartsOption.series[0].data = curMonthxTotal
-            var myChart = echarts.init(document.getElementById('mainEcharts'))
+            this.curMonthechartsOption.xAxis[0].data = curMonthxData
+            this.curMonthechartsOption.series[0].data = curMonthxTotal
+            let myChart = echarts.init(document.getElementById('mainEcharts'))
             myChart.setOption(this.curMonthechartsOption)
           }
-          // console.log(curMonthxData)
         })
       })
     },
     mounted () {
       if (document.getElementById('mainEcharts')) {
-        var myChart = echarts.init(document.getElementById('mainEcharts'))
-        let myChartBing1 = echarts.init(document.getElementById('mainEchartsBing1'))
-        var myChartDayMonth = echarts.init(document.getElementById('mainEchartsDayMonth'))
+        let myChart = echarts.init(document.getElementById('mainEcharts'))
+        let myChartBing = echarts.init(document.getElementById('mainEchartsBing'))
+        let myChartDayMonth = echarts.init(document.getElementById('mainEchartsDayMonth'))
         myChart.setOption(this.curMonthechartsOption)
-        myChartBing1.setOption(this.monthYearRateOptions)
+        myChartBing.setOption(this.monthYearRateOptions)
         myChartDayMonth.setOption(this.dayMonthRateOptions)
       }
     }

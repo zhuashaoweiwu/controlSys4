@@ -9,12 +9,13 @@ import axios from 'axios'
 import qs from 'qs'
 import { Message } from 'element-ui'
 import store from '../store'
+import config from '../config/config'
 // import { getToken } from '@/utils/auth'
 
 // 创建axios实例
 const service = axios.create({
   // baseURL: process.env.TEST_API, // api的base_url
-  baseURL: 'http://103.48.232.124:8080/nnlightctl', // api的base_url
+  baseURL: config.baseUrl, // api的base_url
   timeout: 15000 // 请求超时时间
 })
 
@@ -34,8 +35,6 @@ service.interceptors.request.use(config => {
   }
   return config
 }, error => {
-  // Do something with request error
-  console.log(error) // for debug
   Promise.reject(error)
 })
 
@@ -70,7 +69,6 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.log('err' + error)// for debug
     Message({
       message: error.message,
       type: 'error',

@@ -1,9 +1,3 @@
-/*
-* @Author: Ouber23
-* @Date: 2018-08-14 04:49:28
-* @LastEditors: Ouber23
-* @LastEditTime: 2018-08-14 04:54:59
-*/
 <template>
   <div id="EleboxWarning">
     <div id="searchForm">
@@ -175,12 +169,11 @@
       </el-dialog>
       <div class="pagelist-block">
         <el-pagination
-          @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page.sync="pageNumber"
           :page-size="10"
           layout="prev, pager, next, jumper"
-          :total="pageNumber*10">
+          :total="pageTotal">
         </el-pagination>
       </div>
     </div>
@@ -236,7 +229,7 @@
     },
     computed: {},
     methods: {
-      getListAlarm () {
+      getListAlarm () { // 获取报警列表
         let start = this.alarmTimeValue[0] && this.alarmTimeValue[0].toString()
         let end = this.alarmTimeValue[1] && this.alarmTimeValue[1].toString()
         getListAlarm(this.pageNumber, this.pageSize, this.alarmSource, start, end).then((res) => {
@@ -249,17 +242,14 @@
         })
       },
       // 打开详细信息弹窗
-      handleAlarmDetailOk () {
-        this.detailAlarmVisible = true
-      },
       handleGetDetail (row) {
         this.alarmDetailVisible = true
-        let curId = row.nnlightctlAlarmConfigId ? row.nnlightctlAlarmConfigId : 1
-        if (curId) {
-          getAlarm(curId).then((res) => {
-            console.log(res, '详细信息')
-          })
-        }
+        // let curId = row.nnlightctlAlarmConfigId ? row.nnlightctlAlarmConfigId : 1
+        // if (curId) {
+        //   getAlarm(curId).then((res) => {
+        //     console.log(res, '详细信息')
+        //   })
+        // }
       },
       // 删除警报信息
       handleDeletAlarm () {
@@ -290,23 +280,6 @@
         }
         return moment(date).format('YYYY-MM-DD HH:mm:ss')
       },
-
-      onSubmit () {
-        console.log('submit!')
-      },
-      onResume () {
-        console.log('resume')
-      },
-      toggleSelection (rows) {
-        if (rows) {
-          rows.forEach(row => {
-            this.$refs.multipleTable.toggleRowSelection(row)
-          })
-        } else {
-          this.$refs.multipleTable.clearSelection()
-        }
-      },
-
       // 选中处理ids集合
       handleSelectionChange (val) {
         this.multipleSelection = val
@@ -317,11 +290,9 @@
         }
         console.log(this.selectIds)
       },
-      handleSizeChange (val) {
-        console.log(`每页 ${val} 条`)
-      },
       handleCurrentChange (val) {
-        console.log(`当前页: ${val}`)
+        this.pageNumber = val
+        this.getListAlarm()
       }
     },
     created () {

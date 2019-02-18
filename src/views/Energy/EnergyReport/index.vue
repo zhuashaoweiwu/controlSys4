@@ -3,18 +3,6 @@
     <div class="cont-inpts">
       <el-form ref="searchForm" :model="form" :rules="rules" label-width="80px">
         <el-row type="flex" class="row-bg">
-          <!--<el-col :span="6">-->
-            <!--<el-form-item label="控制柜" prop="eleboxId">-->
-              <!--<el-select v-model="form.eleboxId" placeholder="请选择">-->
-                <!--<el-option-->
-                  <!--v-for="item in eleboxOptions"-->
-                  <!--:key="item.uid"-->
-                  <!--:label="item.codeNumber"-->
-                  <!--:value="item.uid">-->
-                <!--</el-option>-->
-              <!--</el-select>-->
-            <!--</el-form-item>-->
-          <!--</el-col>-->
           <el-col :span="8">
             <el-form-item label="日期" prop="startDate">
               <el-date-picker
@@ -68,29 +56,10 @@
           label="当前总能">
         </el-table-column>
       </el-table>
-      <!--<el-tabs v-model="activeName" @tab-click="handleClick">-->
-      <!--<el-tab-pane label="功率" name="power">-->
-      <!--<div id="power"></div>-->
-      <!--<div id="nonPower"></div>-->
-      <!--</el-tab-pane>-->
-      <!--<el-tab-pane label="电流" name="electricity">-->
-      <!--<div id="electricity"></div>-->
-      <!--</el-tab-pane>-->
-      <!--<el-tab-pane label="电压" name="voltage">-->
-      <!--<div id="voltage">sddsd</div>-->
-      <!--</el-tab-pane>-->
-      <!--<el-tab-pane label="电能" name="electricEnergy">-->
-      <!--<div id="electricEnergy"></div>-->
-      <!--</el-tab-pane>-->
-      <!--<el-tab-pane label="功率因素" name="powerFactor">-->
-      <!--<div id="powerFactor"></div>-->
-      <!--</el-tab-pane>-->
-      <!--</el-tabs>-->
     </div>
   </div>
 </template>
 <script>
-  import echarts from 'echarts'
   import moment from 'moment'
   import {listEleboxEnergyStatistic, getEleboxEnergyStatistic} from '@/api/EnergyAnalyze/energyanalyze'
   import {listElebox} from '@/api/RoadLighting/deploy'
@@ -143,9 +112,6 @@
       })
     },
     mounted () {
-      // 初始化电压
-      // var myChart = echarts.init(document.getElementById('voltage'))
-      // myChart.setOption(this.voltageOption)
       listEleboxEnergyStatistic(this.form.selectDate[0].toString(), this.form.selectDate[1].toString()).then(res => {
         this.powerData = res.data
       })

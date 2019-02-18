@@ -20,7 +20,6 @@
       <div>
         <el-row :gutter="20">
           <GeneralChart :pie-data="pieData"></GeneralChart>
-          <!--<GeneralChartLine :line-data="lineData"></GeneralChartLine>-->
           <el-col :span="16">
             <div class="grid-content bg-purple">
               <div ref="myChart_" :style="{width: '800px', height: '400px'}"></div>
@@ -34,7 +33,6 @@
 <script>
   import GeneralChart from './generalChart.vue'
   import moment from 'moment'
-
   import {listDeviceRepaireStatistic, listDeviceDamageCountByMonth, exportDeviceOperation} from '@/api/AssetAdmin.js'
 
   export default {
@@ -83,8 +81,8 @@
       }
     },
     methods: {
-      exportDeviceOperation () {
-        let params = {
+      exportDeviceOperation () { // 导出设备运维情况
+        let params = { // 时间转化为字符串
           startDate: this.timeStart.toString(),
           endDate: this.timeEnd.toString()
         }
@@ -96,7 +94,7 @@
         myChart1.clear()
         myChart1.setOption(this.areaOptions, true)
       },
-      listDeviceDamageCountByMonth () {
+      listDeviceDamageCountByMonth () { // 设备损坏总数
         listDeviceDamageCountByMonth(this.yearStart.toString(), moment().toString()).then(res => {
           res.data.forEach(d => {
             let index_ = moment(d.month).month()
@@ -106,8 +104,8 @@
           this.monthNumber()
         })
       },
-      getListDeviceRepaireStatistic () {
-        switch (this.timeValue) {
+      getListDeviceRepaireStatistic () { // 获取设备维修情况分布
+        switch (this.timeValue) { // 判断是根据年还是季度还是月
           case 1:
             this.timeStart = this.monthStart
             this.timeEnd = this.monthEnd
@@ -130,7 +128,7 @@
           })
         })
       },
-      getDate () {
+      getDate () { // 判断日期
         let currentQuarter = moment().quarter() // 当前是第几季度
         let currentYear = moment().year()
         this.quarterStart = moment(moment(currentYear + '-01-01').toDate()).quarter(currentQuarter).toDate()
@@ -153,7 +151,6 @@
     created () {
       this.getDate()
       this.getListDeviceRepaireStatistic()
-      // this.listDeviceDamageCountByMonth()
     },
     mounted () {
       this.listDeviceDamageCountByMonth()

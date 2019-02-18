@@ -120,13 +120,13 @@
         this.getList()
         // 改变每页条数
       },
-      selectTimeFun () {
+      selectTimeFun () { // 时间转换
         if (this.selectTime !== null) {
           this.searchObj.startDate = new Date(this.selectTime[0]).toString()
           this.searchObj.endDate = new Date(this.selectTime[1]).toString()
         }
       },
-      goSearch () {
+      goSearch () { // 查找
         this.getList()
       },
       getList () { // 获取列表

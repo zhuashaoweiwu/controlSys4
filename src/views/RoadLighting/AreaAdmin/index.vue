@@ -120,7 +120,7 @@
   </div>
 </template>
 <script>
-  import {listArea, deleteArea, addOrUpdateArea, getLevelArea} from '@/api/RoadLighting/deploy'
+  import {listArea, deleteArea, addOrUpdateArea} from '@/api/RoadLighting/deploy'
   import '../../../utils/filter.js'
 
   export default {
@@ -159,10 +159,10 @@
         this.getList()
       },
       getList () {
-        let that = this
-        listArea(that.pageNumber, that.pageSize, this.areaName).then(response => {
-          that.List = response.data
-          if (that.List.length > 0) {
+        // 获取区域列表
+        listArea(this.pageNumber, this.pageSize, this.areaName).then(response => {
+          this.List = response.data
+          if (this.List.length > 0) {
             this.allTotal = response.total
           } else {
             this.allTotal = 0
@@ -176,7 +176,7 @@
         this.addDialog = true
         this.addOrUpdateStatus = 'add'
       },
-      deleteRow (type, e) {
+      deleteRow (type, e) { // 删除区域
         let _array = []
         if (type === 1) {
           _array.push(this.List[e].id)
@@ -194,7 +194,7 @@
             return
           }
         }
-        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        this.$confirm('此操作将永久删除, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -216,13 +216,13 @@
           })
         })
       },
-      editRow (e) {
+      editRow (e) { // 编辑
         this.TITLE = '修改'
         this.addOrUpdateStatus = 'edit'
         this.addArea = Object.assign({}, this.List[e])
         this.addDialog = true
       },
-      onSubmit () {
+      onSubmit () { // 新增或者修改区域
         this.$refs['addEditForm'].validate((valid) => {
           if (valid) {
             let _text
@@ -256,8 +256,6 @@
     },
     created () {
       this.getList()
-    },
-    destroyed () {
     }
   }
 </script>

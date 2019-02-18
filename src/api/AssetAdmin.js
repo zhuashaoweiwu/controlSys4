@@ -41,7 +41,6 @@ export function exportDeviceOperation (param) {
     ContentType: 'application/x-www-form-urlencoded',
     responseType: 'arraybuffer'
   }).then((res) => {
-    console.log(res)
     let blob = new Blob([res.data], {type: 'application/vnd.ms-excel'})
     let objectUrl = URL.createObjectURL(blob)
     window.location.href = objectUrl
@@ -112,6 +111,7 @@ export function listRepairRecord (isCommit) {
   })
 }
 
+// 获取全部一级资产分类目录
 export function listPropertyClassifyCatalogLevel1 () {
   return request({
     url: '/api/propertyManager/listPropertyClassifyCatalogLevel1',

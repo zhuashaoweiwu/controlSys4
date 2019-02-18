@@ -72,7 +72,6 @@
         </el-table-column>
       </el-table>
     </template>
-
     <!--    添加   -->
     <el-dialog title="添加资产" :visible.sync="dialogAdd">
       <el-form :model="addData" style="margin:0 auto" :rules="rules" ref="addData" class="demo-ruleaddData">
@@ -289,6 +288,7 @@
       }
     },
     created () {
+      // 获取全部一级资产分类目录
       listPropertyClassifyCatalogLevel1().then(res => {
         res.data.forEach(d => {
           this.catalogSelect.push(d)
@@ -298,12 +298,11 @@
             })
           })
         })
-        console.log(this.catalogSelect)
       })
-      listElebox().then(res => {
+      listElebox().then(res => { // 获取所有控制柜，用于下拉框
         this.eleBoxSelect = res.data
       })
-      listRepairRecord(this.activeName).then(res => {
+      listRepairRecord(this.activeName).then(res => { // 按照状态获取维修记录
         for (var i = 0; i < res.data.length; i++) {
           res.data[i].faultDate = changeTime(res.data[i].faultDate)
           res.data[i].createDate = changeTime(res.data[i].createDate)
@@ -317,7 +316,7 @@
       })
     },
     methods: {
-      handleClick (tab, event) {
+      handleClick (tab, event) { // 切换状态显示维修记录
         this.activeName = tab.name
         listRepairRecord(tab.name).then(res => {
           for (var i = 0; i < res.data.length; i++) {
@@ -332,20 +331,18 @@
           this.repairRecord = res.data
         })
       },
-      handleEdit (index, row) {
+      handleEdit (index, row) { // 编辑维修记录
         this.dialogEdit = true
         getRepairRecord(row.id).then(res => {
           this.editData = res.data[0]
           this.editData.id = row.id
         })
       },
-      handleDelete (index, row) {
-        var a = []
+      handleDelete (index, row) { // 删除维修记录
+        let a = []
         a.push(row.id)
-        console.log(a)
-        var that = this
         deleteRepairRecord(a).then(res => {
-          that.$message({
+          this.$message({
             type: 'success',
             message: '删除成功'
           })
@@ -366,7 +363,7 @@
       handleSelectionChange (val) {
         this.multipleSelection = val
       },
-      setBtn () {
+      setBtn () { // 设置前判断是否选中
         if (!this.multipleSelection.length) {
           this.$message({
             type: 'default',
@@ -376,7 +373,7 @@
           this.dialogSetTime = true
         }
       },
-      configAutoCommitRepairRecord () {
+      configAutoCommitRepairRecord () { // 设置自动提交维修记录
         let repairRecordIds = []
         this.multipleSelection.forEach(d => {
           repairRecordIds.push(d.id)
@@ -403,7 +400,7 @@
           })
         })
       },
-      alldelte () {
+      alldelte () { // 批量删除
         let repairRecordIds = []
         if (this.multipleSelection.length) {
           this.multipleSelection.forEach(d => {
@@ -435,7 +432,7 @@
           })
         })
       },
-      updatacommitRepairRecord () {
+      updatacommitRepairRecord () { // 提交维修记录
         let repairRecordIds = []
         if (this.multipleSelection.length) {
           this.multipleSelection.forEach(d => {
@@ -467,7 +464,7 @@
           })
         })
       },
-      updateRepairRecord (type) {
+      updateRepairRecord (type) { // 修改维修记录
         let dom = 'addData'
         let obj = {}
         if (type) {
@@ -525,18 +522,6 @@
     margin: 0 auto;
 
     height: auto;
-  }
-
-  .search {
-    display: flex;
-    width: 50%;
-    margin-top: 20px;
-
-  }
-
-  .dateChange {
-    display: flex;
-    line-height: 40px;
   }
 
   .buttonList {

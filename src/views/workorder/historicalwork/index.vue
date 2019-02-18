@@ -10,9 +10,7 @@
             </el-form-item>
             </el-form>
         </div>
-
         <div class="center">
-           
             <el-table
                 ref="multipleTable"
                 :data="tableData3"

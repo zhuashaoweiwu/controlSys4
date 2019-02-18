@@ -7,10 +7,6 @@
       <el-input placeholder="请输入要搜索的部门地址" class="input-with-select" v-model="departmentAddr" clearable
                 @clear="getListDepartment">
       </el-input>
-      <!--<el-button slot="append" type="primary"  icon="el-icon-search"></el-button>-->
-      <!-- <div class="btn-block f-r">
-        <el-button type="primary">查询</el-button>
-      </div> -->
     </div>
     <div class="system-center">
       <div class="operation-bar">
@@ -248,7 +244,7 @@
           this.newObject.departmentLevel = 1
         }
       },
-      addOrUpdateDepartment () {
+      addOrUpdateDepartment () { // 新增或者修改机构
         let postData = {}
         if (this.newObject.id) {
           postData.nnlightctlDepartmentIdParent = this.newObject.nnlightctlDepartmentIdParent
@@ -293,7 +289,7 @@
           console.log(error)
         })
       },
-      // 获取列表
+      // 获取部门列表
       getListDepartment () {
         let that = this
         listDepartment(that.pageNumber, that.pageSize, that.departmentName, that.departmentAddr).then(response => {

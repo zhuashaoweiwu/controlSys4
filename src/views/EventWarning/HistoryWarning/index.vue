@@ -1,9 +1,3 @@
-/*
-* @Author: Ouber23
-* @Date: 2018-08-14 04:49:28
-* @LastEditors: Ouber23
-* @LastEditTime: 2018-08-14 04:54:59
-*/
 <template>
   <div id="EleboxWarning">
     <div id="searchForm">
@@ -21,9 +15,6 @@
         <el-form-item>
           <el-button type="primary" @click="getHistoryAlarmData">查询</el-button>
         </el-form-item>
-        <!--<el-form-item>-->
-        <!--<el-button type="primary" @click="onResume">重置</el-button>-->
-        <!--</el-form-item>-->
       </el-form>
     </div>
     <div id="dataTable">
@@ -121,7 +112,7 @@
     data () {
       return {
         tableData: [],
-        pickerOptions: {
+        pickerOptions: { // 日期组件配置
           shortcuts: [{
             text: '最近一周',
             onClick (picker) {
@@ -159,16 +150,15 @@
     },
     computed: {},
     methods: {
-      handleSelectionChange (val) {
+      handleSelectionChange (val) { // 选择
         this.multipleSelection = val
         if (val) {
           this.selectIds = val.map((item, index) => {
             return item.id
           })
         }
-        console.log(this.selectIds)
       },
-      getHistoryAlarmData () {
+      getHistoryAlarmData () { // 获取历史报警
         let start = this.alarmTimeValue[0] && this.alarmTimeValue[0].toString()
         let end = this.alarmTimeValue[1] && this.alarmTimeValue[1].toString()
         listAlarmHistory(this.pageNumber, this.pageSize, start, end).then((res) => {
@@ -177,11 +167,10 @@
           } else {
             this.pageTotal = this.pageNumber * 10 + 1
           }
-          // console.log(res, '历史数据')
           this.tableData = res.data // 数据初始化
         })
       },
-      clearAlarmHistory () {
+      clearAlarmHistory () { // 清除报警
         clearAlarmHistory(this.selectIds).then(res => {
           this.$message({
             message: '清除成功',
@@ -189,7 +178,7 @@
           })
         })
       },
-      handleImportAlarm () {
+      handleImportAlarm () { // 导出报警
         exportAlarmHistory(this.selectIds)
       },
       // 时间格式化

@@ -102,6 +102,7 @@
         <el-button type="primary" @click="linkmanUpdate(1)">确 定</el-button>
       </div>
     </el-dialog>
+    <!--联系人列表-->
     <div class="table">
       <template>
         <el-table
@@ -208,7 +209,7 @@
         dialogFormVisible: false,
         dialogFormVisible2: false,
         multipleSelection: [],
-        addData: {
+        addData: { // 增加联系人数据
           maskName: '',
           sex: '',
           age: '',
@@ -219,7 +220,7 @@
           codeNumber: '',
           department: ''
         },
-        Contact: {
+        Contact: { // 修改联系人数据
           maskName: '',
           sex: '',
           age: '',
@@ -243,10 +244,8 @@
             {required: true, message: '请输入名称', trigger: 'blur'},
             {min: 2, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur'}
           ],
-
           age: [
             {required: true, message: '年龄不能为空'}
-
           ],
           email: [
             {required: true, message: '请输入邮箱地址', trigger: 'blur'},
@@ -260,18 +259,18 @@
       this.getListMasker()
     },
     methods: {
-      getListMasker () {
+      getListMasker () { // 获取联系人列表
         // listMasker(this.pageNumber, this.pageSize, this.department, this.phoneNumber).then(res => {  // 后台未更新模糊查询为空
         listMasker(this.pageNumber, this.pageSize).then(res => {
           res.data.length && res.data.forEach(d => {
-              d.sex === 0 ? d.sex = '女' : d.sex = '男'
+              d.sex === 0 ? d.sex = '女' : d.sex = '男' // 性别显示
             }
           )
           this.listMaskerData = res.data
           this.listTotal = res.total
         })
       },
-      alldelte () {
+      alldelte () { // 批量删除联系人
         let ids = []
         if (this.multipleSelection.length) {
           this.multipleSelection.forEach(d => {
@@ -292,18 +291,16 @@
           this.getListMasker()
         })
       },
-      handleSelectionChange (val) {
+      handleSelectionChange (val) { // 选择联系人
         this.multipleSelection = val
       },
-      handleEdit (index, row) {
+      handleEdit (index, row) { // 编辑联系人对话框
         getMasker(row.id).then(res => {
           this.Contact = res.data[0]
         })
-
         this.dialogFormVisible2 = true
       },
-      handleDelete (index, row) {
-        // console.log(index, row);
+      handleDelete (index, row) { // 删除单个联系人
         deleteMasker(row.id).then(res => {
           this.$message({
             type: 'success',
@@ -312,16 +309,15 @@
           this.getListMasker()
         })
       },
-      handleSizeChange (val) {
+      handleSizeChange (val) { // 改变每页条数
         this.pageSize = val
         this.getListMasker()
       },
-      handleCurrentChange (val) {
+      handleCurrentChange (val) { // 改变页数
         this.pageNumber = val
         this.getListMasker()
       },
-      linkmanUpdate (type) {
-        //   console.log(this.form)
+      linkmanUpdate (type) { // 更新联系人
         let obj = this.addData
         if (type) {
           obj = this.Contact
@@ -347,13 +343,11 @@
           }
         })
       },
-      linkmanContact (formName) {
-        //   console.log(this.Contact)
-        var that = this
+      linkmanContact (formName) { // 修改联系人
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            ConOrUpdateMasker(that.Contact.id, that.Contact.maskName, that.Contact.sex, that.Contact.age, that.Contact.phoneNumber, that.Contact.email, that.Contact.place, that.Contact.nnlightctlMaskerId, that.Contact.codeNumber, that.Contact.department).then(res => {
-              that.$message({
+            ConOrUpdateMasker(this.Contact.id, this.Contact.maskName, this.Contact.sex, this.Contact.age, this.Contact.phoneNumber, this.Contact.email, this.Contact.place, this.Contact.nnlightctlMaskerId, this.Contact.codeNumber, this.Contact.department).then(res => {
+              this.$message({
                 type: 'success',
                 message: '修改成功'
               })
@@ -365,24 +359,7 @@
             return false
           }
         })
-      },
-      open3 () {
-        this.$prompt('请输入邮箱', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
-          inputErrorMessage: '邮箱格式不正确'
-        }).then(({value}) => {
-          this.$message({
-            type: 'success',
-            message: '你的邮箱是: ' + value
-          })
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '取消输入'
-          })
-        })
+        // /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/邮箱正则
       }
     }
   }

@@ -87,7 +87,7 @@ export default {
     handleSizeChange (val) {
       this.pageSize = val
     },
-    // 获取列表
+    // 获取在线用户列表
     getListUser () {
       let that = this
       listOnlineUser().then(response => {
@@ -99,8 +99,6 @@ export default {
   },
   created () {
     this.getListUser()
-  },
-  destroyed () {
   }
 }
 </script>

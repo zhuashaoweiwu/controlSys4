@@ -9,19 +9,13 @@
         <span class="title">项目编号</span>
         <el-input placeholder="请输入内容" v-model="projectCode"></el-input>
       </div>
-      <!-- <div class="item-block f-l">
-        <span class="title">类型</span><el-input  placeholder="请输入内容"></el-input>
-      </div> -->
       <div class="btn-block f-r">
         <el-button type="primary" @click="searchProject">查询</el-button>
-        <!-- <el-button>重置</el-button> -->
       </div>
     </div>
     <div class="system-center">
       <div class="operation-bar">
         <el-button @click="addProject()" type="primary">增加</el-button>
-        <!-- <el-button @click="importData()">导入</el-button>
-        <el-button @click="exportData()">导出</el-button> -->
         <el-button @click="deleteRow(2)">删除</el-button>
       </div>
       <div class="data-list">
@@ -436,7 +430,7 @@
         this.pageNumber = val
         this.getListProject()
       },
-      getListProject () {
+      getListProject () { // 获取项目列表
         let that = this
         listProject(that.pageNumber, that.pageSize, this.projectName, this.projectCode).then(response => {
           that.projectList = response.data
@@ -449,21 +443,10 @@
           console.log(error)
         })
       },
-      searchProject () {
+      searchProject () { // 查找项目
         this.getListProject()
       },
-      // 获取单个项目用以编辑
-      // getProject (codeNumber) {
-      //   return new Promise((resolve, reject) => {
-      //     getProject(codeNumber).then(response => {
-      //       resolve(response.data[0])
-      //     }).catch(error => {
-      //       reject(error)
-      //     })
-      //   })
-      // },
-      // 编辑
-      editRow (e) {
+      editRow (e) { // 编辑项目
         this.editIndex = e
         getProject(this.projectList[e].id).then(res => {
           this.newProject = res.data[0]
@@ -502,7 +485,6 @@
           type: 'warning'
         }).then(() => {
           DelectProject(_array).then(response => {
-            // that.projectList.splice(e, 1)
             this.$message({
               type: 'success',
               message: '删除成功!'
@@ -518,12 +500,6 @@
           })
         })
       },
-      // 数据导出
-      // exportData () {
-      // },
-      // 数据导入
-      // importData () {
-      // },
       goRules (formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
@@ -533,7 +509,7 @@
           }
         })
       },
-      onSubmit () {
+      onSubmit () { // 添加项目
         if (this.newProject.state) {
           this.newProject.state = 1
         } else {

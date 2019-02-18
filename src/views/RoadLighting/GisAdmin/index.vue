@@ -171,7 +171,7 @@ export default {
       this.pageSize = val
       this.getList()
     },
-    getList () {
+    getList () { // 获取GIS列表
       listGIS(this.pageNumber, this.pageSize, this.type).then(response => {
         this.List = response.data
         if (this.List.length > 0) {

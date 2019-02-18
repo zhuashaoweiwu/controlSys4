@@ -226,7 +226,6 @@
         <el-button type="primary" @click="handleOpenAlarmOk">确 定</el-button>
       </span>
     </el-dialog>
-
     <!--意外亮灯-->
     <el-dialog title="意外亮灯" :visible.sync="lightSetVisible">
       <el-row>
@@ -496,7 +495,6 @@
       },
       // 配置保存数据
       handleAlarmConfigSave () {
-        // this.lightOpenVisible = false
         this.alermConfigData.isNoticeMap = +this.alermConfigData.isNoticeMap
         this.alermConfigData.isNoticeSms = +this.alermConfigData.isNoticeSms
         this.alermConfigData.isNoticeEmail = +this.alermConfigData.isNoticeEmail
@@ -518,12 +516,9 @@
           this.lightSetVisible = false
         })
       }
-    },
-    created () {
     }
   }
 </script>
-
 <style lang="scss">
   /* reset element-ui css */
   .el-tabs__nav-scroll {

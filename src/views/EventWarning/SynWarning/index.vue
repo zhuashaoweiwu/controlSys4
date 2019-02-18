@@ -1,9 +1,3 @@
-/*
-* @Author: Ouber23
-* @Date: 2018-08-14 04:49:28
-* @LastEditors: Ouber23
-* @LastEditTime: 2018-08-14 04:54:59
-*/
 <template>
   <div id="EleboxWarning">
     <div id="dataTable">

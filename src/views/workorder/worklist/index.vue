@@ -1,7 +1,7 @@
 <template>
   <div class="box">
     <p></p>
-    <div class="buttonlist">
+    <div class="button-list">
       <div>
         <p><i class="el-icon-service"></i></p>
         <p>我的工单： {{countOrderData.total}} 个</p>
@@ -43,10 +43,9 @@
           <el-table-column prop="priority" label="优先级" :formatter="priorityFilter"></el-table-column>
           <el-table-column prop="serialNumber" label="编号"></el-table-column>
           <el-table-column prop="state" label="状态"></el-table-column>
-          <!--<el-table-column prop="workSource" label="来源"></el-table-column>-->
           <el-table-column prop="workCreated" label="工单创建时间" :formatter="timeFilter"></el-table-column>
           <el-table-column label="操作" v-if="orderState===1">
-            <template slot-scope="scope"><!--v-if="$props.attachFilePath"-->
+            <template slot-scope="scope">
               <el-button type="text" size="small" @click="claimWordOrderOpen(scope.row)">认领</el-button>
             </template>
           </el-table-column>
@@ -261,7 +260,7 @@
       }
     },
     methods: {
-      maskerFilter (row, column, cellValue, index) {
+      maskerFilter (row, column, cellValue, index) { // 处理人过滤
         if (!cellValue) return ''
         let val = ''
         this.maskerIds.forEach(d => {
@@ -271,10 +270,10 @@
         })
         return val
       },
-      timeFilter (row, column, cellValue) {
+      timeFilter (row, column, cellValue) { // 时间过滤
         return moment(cellValue).format('YYYY-MM-DD HH:mm:ss')
       },
-      areaFilter (row, column, cellValue) {
+      areaFilter (row, column, cellValue) { // 区域过滤
         if (!cellValue) return ''
         let val = ''
         this.areaOptions.forEach(d => {
@@ -284,7 +283,7 @@
         })
         return val
       },
-      priorityFilter (row, column, cellValue) {
+      priorityFilter (row, column, cellValue) { // 优先级过滤
         if (!cellValue) return ''
         let val = ''
         this.priorityOptions.forEach(d => {
@@ -294,7 +293,7 @@
         })
         return val
       },
-      classifyFilter (row, column, cellValue) {
+      classifyFilter (row, column, cellValue) { // 分类过滤
         if (!cellValue) return ''
         let val = ''
         this.classifyOptions.forEach(d => {
@@ -304,7 +303,7 @@
         })
         return val
       },
-      addWorkOrder () {
+      addWorkOrder () { // 新增工单
         // var formData = new FormData() // FormData 对象
         // formData = this.addOrderData
         // this.addOrderData.attachFilePath = this.$refs.resource.files[0]
@@ -342,7 +341,7 @@
         this.claimData.workOrderId = row.id
         this.dialogClaimVisible = true
       },
-      claimWordOrder () {
+      claimWordOrder () { // 认领工单
         claimWordOrder(this.claimData).then(res => {
           if (res.data) {
             this.$message({
@@ -371,20 +370,6 @@
             break
         }
       },
-      addWork () {
-        addWordOrder(this.formdata.serialNumber, this.formdata.classify, this.formdata.nnlightctlWorkflowerId, this.formdata.priority, this.formdata.nnlightctlRegionId, this.formdata.address, this.formdata.nnlightctlMaskerId, this.formdata.content, this.formdata.attachFilePath).then(res => {
-          console.log(res.data)
-          this.formdatahide = false
-          listWorkOrder().then(res => {
-            for (var i = 0; i < res.data.length; i++) {
-              // res.data[i].gmtCreated = changeTime(res.data[i].gmtCreated)
-              // res.data[i].gmtUpdated = changeTime(res.data[i].gmtUpdated)
-              // res.data[i].workCreated = changeTime(res.data[i].workCreated)
-            }
-            this.tableData = res.data
-          })
-        })
-      },
       handleClick (row) {
         console.log(row)
         this.dialogTableVisible = true
@@ -397,17 +382,14 @@
         this.pageNumber = val
         this.getWorkOrderList()
       },
-      getWorkOrderList () {
+      getWorkOrderList () { // 获取工单列表
         if (this.orderState) {
           listWorkOrder(this.pageNumber, this.pageSize, this.orderState).then(res => {
-            // res.data.length && res.data.forEach(d => {
-            //   d.gmtCreated=moment(gmtCreated)
-            // })
-            this.workOrderList = res.data
+            this.workOrderList = res.data || []
           })
         } else {
           listWorkOrder(this.pageNumber, this.pageSize).then(res => {
-            this.workOrderList = res.data
+            this.workOrderList = res.data || []
           })
         }
       }
@@ -431,13 +413,6 @@
         this.countOrderData = res.data[0]
       })
       this.getWorkOrderList()
-      // listWorkOrder().then(res => {
-      //   for (var i = 0; i < res.data.length; i++) {
-      //     // res.data[i].gmtCreated = changeTime(res.data[i].gmtCreated)
-      //     // res.data[i].gmtUpdated = changeTime(res.data[i].gmtUpdated)
-      //   }
-      //   this.tableData = res.data
-      // })
     }
   }
 </script>
@@ -452,11 +427,11 @@
     font-size: 12px;
   }
 
-  .buttonlist {
+  .button-list {
     padding-top: 20px;
   }
 
-  .buttonlist > div {
+  .button-list > div {
     float: left;
     width: 150px;
     height: 80px;
@@ -464,12 +439,12 @@
     margin-right: 20px;
   }
 
-  .buttonlist p {
+  .button-list p {
     text-align: center;
     font-size: 14px;
   }
 
-  .buttonlist > div p:nth-child(1) {
+  .button-list > div p:nth-child(1) {
     margin-top: 20px;
     margin-bottom: 10px;
     font-size: 16px;

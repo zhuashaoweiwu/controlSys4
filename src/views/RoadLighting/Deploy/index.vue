@@ -300,7 +300,6 @@
         <div class="loop-info">
           <div class="operate-block clearfix">
             <a class="f-l" @click="addLoop()"><i class="iconfont ">&#xe648;</i>添加回路</a>
-            <!-- <a class="f-l"><i class="iconfont">&#xe632;</i>删除</a> -->
           </div>
           <el-table
             ref="multipleTable"
@@ -630,23 +629,6 @@
             <el-table-column prop="lamppost" label="灯杆" width="120"></el-table-column>
             <el-table-column prop="decay" label="光衰" width="80"></el-table-column>
             <el-table-column prop="mem" label="备注"></el-table-column>
-            <!-- <el-table-column fixed="right" label="操作" width="60">
-              <template slot-scope="scope">
-                <el-button
-                  @click.native.prevent="editLightRow(scope.$index)"
-                  type="text"
-                  size="small">
-                  编辑
-                </el-button>
-                <el-button
-                  class="danger-text-btn"
-                  @click.native.prevent="deleteLightRow(1, scope.$index)"
-                  type="text"
-                  size="small">
-                  删除
-                </el-button>
-              </template>
-            </el-table-column> -->
           </el-table>
         </div>
         <div class="controll-wrap">
@@ -709,23 +691,6 @@
                 </el-select>
               </template>
             </el-table-column>
-            <!-- <el-table-column fixed="right" label="操作">
-              <template slot-scope="scope">
-                <el-button
-                  @click.native.prevent="editRow(scope.$index)"
-                  type="text"
-                  size="small">
-                  编辑
-                </el-button>
-                <el-button
-                  class="danger-text-btn"
-                  @click.native.prevent="deleteLightOfLoop(1, scope.$index)"
-                  type="text"
-                  size="small">
-                  删除
-                </el-button>
-              </template>
-            </el-table-column> -->
           </el-table>
         </div>
       </div>
@@ -1332,10 +1297,7 @@
           this.lightPageSizeBeifen = this.lightPageSize
           this.lightPageNumber = null
           this.lightPageSize = null
-          // this.eleboxId = null
           this.notBe = 1
-          // this.getListLighting()
-          // this.getListEleboxModel(this.eleboxIdBeifen)
         } else {
           this.getListLightingByEleboxId()
           this.selectModelLoopId = null
@@ -1362,7 +1324,7 @@
       }
     },
     methods: {
-      batchSetEleboxArea () {
+      batchSetEleboxArea () { // 设置控制柜区域
         let _array = []
         if (this.boxMultipleSelection.length > 0) {
           this.boxMultipleSelection.forEach(selectedItem => {
@@ -1381,7 +1343,7 @@
           }
         })
       },
-      batchSetLightingArea () {
+      batchSetLightingArea () { // 设置灯具区域
         let _array = []
         if (this.lightMultipleSelection.length > 0) {
           this.lightMultipleSelection.forEach(selectedItem => {
@@ -1400,7 +1362,7 @@
           }
         })
       },
-      getLevelArea () {
+      getLevelArea () { // 获取区域
         this.allAreaList = []
         getLevelArea().then(res => {
           if (res.data.length) {
@@ -1416,7 +1378,7 @@
           }
         })
       },
-      searchBox () {
+      searchBox () { // 查找控制柜
         this.getListElebox()
       },
       filterNode (value, data) {
@@ -1463,12 +1425,6 @@
       },
       addCabinet () {
         this.cabinetDialog = true
-      },
-      deleteRow () {
-      },
-      editRow () {
-      },
-      onSubmit () {
       },
       handleCloseDialog (done) {
         // 弹窗关闭时将数据清空
@@ -1850,10 +1806,6 @@
       /*
       *  灯具区域
       */
-      // 获取不属于任何控制柜的灯具
-      getLightNotBelongElebox () {
-
-      },
       // 获取灯具列表
       getListLighting () {
         // this.eleboxId = null

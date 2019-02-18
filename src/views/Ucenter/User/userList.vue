@@ -10,12 +10,6 @@
             :value="item.id">
           </el-option>
         </el-select>
-        <!-- <el-input placeholder="请输入内容" class="input-with-select">
-        </el-input> -->
-        <!-- <el-button slot="append" type="primary" @click="goSearch()" icon="el-icon-search"></el-button> -->
-        <!-- <div class="btn-block f-r">
-          <el-button type="primary">查询</el-button>
-        </div> -->
       </div>
       <div class="system-center">
         <div class="operation-bar">
@@ -290,7 +284,7 @@ export default {
         console.log(error)
       })
     },
-    addOrUpdateUser () {
+    addOrUpdateUser () { // 更新或者新增用户
       if (this.newUser.isRemenberPwd === '是') {
         this.newUser.isRemenberPwd = 1
       } else {
@@ -320,7 +314,7 @@ export default {
         console.log(error)
       })
     },
-    // 获取列表
+    // 获取用户列表
     getListUser () {
       let that = this
       listUser(that.pageNumber, that.pageSize, this.userType).then(response => {
@@ -356,7 +350,7 @@ export default {
         console.log(error)
       })
     },
-    // 删除
+    // 删除用户
     deleteRow (type, e) {
       let _array = []
       if (type === 1) {

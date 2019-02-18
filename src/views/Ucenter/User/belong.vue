@@ -90,7 +90,7 @@
         this.selectInstitution = val
         console.log(val)
       },
-      getProjectsByInstitutionId () {
+      getProjectsByInstitutionId () { // 获取项目
         getProjectsByInstitutionId(this.selectInstitution).then(res => {
           res.data.forEach(d => {
             d.state = d.state ? '已启用' : '未启用'

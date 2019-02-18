@@ -4,7 +4,7 @@ export function login (username, password) {
   return request({
     url: '/api/login/Login',
     method: 'post',
-    params: {
+    data: {
       loginName: username,
       pwd: password
     }
@@ -15,7 +15,7 @@ export function getInfo (token) {
   return request({
     url: '/user/info',
     method: 'get',
-    params: { token }
+    data: { token }
   })
 }
 
@@ -23,7 +23,7 @@ export function register (username, password) {
   return request({
     url: '/api/login/register',
     method: 'post',
-    params: {
+    data: {
       loginName: username,
       pwd: password
     }
@@ -34,7 +34,7 @@ export function logout (username, password) {
   return request({
     url: '/api/login/Logout',
     method: 'post',
-    params: {
+    data: {
     }
   })
 }

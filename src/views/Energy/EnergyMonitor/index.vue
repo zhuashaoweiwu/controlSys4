@@ -33,9 +33,6 @@
         </el-row>
       </el-form>
     </div>
-    <!-- <div class="search">
-      <el-button type="primary" @click="this.changeData" plain>查询</el-button>
-    </div> -->
     <div class="echarts-lines">
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="功率" name="power">
@@ -68,8 +65,6 @@
     listEleboxVoltage
   } from '@/api/EnergyAnalyze/energyanalyze'
   import {listElebox} from '@/api/RoadLighting/deploy'
-  // 基于准备好的dom，初始化echarts实例
-  // let myChart = echarts.init(document.getElementById('voltage'));
   export default {
     name: 'TerReport',
     data () {
@@ -361,19 +356,6 @@
               type: 'line',
               smooth: true,
               data: [0, 1, 0.25, 1.25, 1.5, 0.6, 0.5, 1.3, 1, 0.25, 1.25, 1.5, 0.6, 0.5, 1.3]
-              // markArea: {
-              //   data: [ [{
-              //     name: '早高峰',
-              //     xAxis: '07:30'
-              //   }, {
-              //     xAxis: '10:00'
-              //   }], [{
-              //     name: '晚高峰',
-              //     xAxis: '17:30'
-              //   }, {
-              //     xAxis: '21:15'
-              //   }] ]
-              // }
             }
           ]
         },
@@ -397,7 +379,7 @@
     },
     methods: {
       handleClick (tab, event) {
-        switch (this.activeName) {
+        switch (this.activeName) { // 切换
           case 'power':
             this.listEleboxPower()
             break
@@ -414,12 +396,12 @@
         }
         console.log(this.activeName)
       },
-      getData () {
+      getData () { // 获取数据
         let start = moment(this.form.selectDate[0])
         let end = moment(this.form.selectDate[1])
         let dif = end.diff(start, 'days')
         if (dif < 1 || dif > 20) {
-          this.$message({
+          this.$message({ // 为了保证页面正常，所选择日期间隔不能大于20days
             message: '请选择正确的日期且日期间隔不能大于20天！',
             type: 'warning'
           })
@@ -465,7 +447,7 @@
           }
         })
       },
-      listEleboxPower () {
+      listEleboxPower () { // 获取功率
         listEleboxPower(this.searchData).then(res => {
           let date = []
           let dataNum = []
@@ -481,7 +463,7 @@
           // this.nodrainVoltageChart.setOption(this.nonPowerOption)
         })
       },
-      listEleboxElectric () {
+      listEleboxElectric () { // 获取电流
         listEleboxElectric(this.searchData).then(res => {
           let date = []
           let dataNum = []
@@ -494,7 +476,7 @@
           this.electricityVoltageChart.setOption(this.electricityOption)
         })
       },
-      listEleboxVoltage () {
+      listEleboxVoltage () { // 获取电压
         listEleboxVoltage(this.searchData).then(res => {
           let date = []
           let dataNum = []
@@ -527,8 +509,6 @@
       // this.powerFactorVoltageChart.setOption(this.powerFactorOption)
     }
   }
-  // 使用刚指定的配置项和数据显示图表。
-  // myChart.setOption(option);
 </script>
 
 <style>

@@ -9,10 +9,6 @@
             <span>{{index}}</span>
             <span class="sub-num">{{item}}</span>
           </span>
-        <!-- <span class="item">
-          <span>中国</span>
-          <span class="sub-num">1</span>
-        </span> -->
       </div>
     </div>
     <div class="module-item module-item2">
@@ -68,11 +64,9 @@
               } else {
                 countryList[countryName] = 1
               }
-              // console.log(project);
               this.allTotal = this.allTotal + response.total
               this.kzTotal = this.kzTotal + project.eleboxs
               this.dTotal = this.dTotal + project.lights
-              console.log(this.allTotal)
             }
           } else {
           }

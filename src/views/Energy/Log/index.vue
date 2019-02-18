@@ -96,7 +96,7 @@
     name: 'EnergyMonitor',
     data () {
       return {
-        pickerOptions: {
+        pickerOptions: { // 日期只能选择当前日期
           disabledDate (time) {
             return time.getTime() > Date.now() - 8.64e6
           }
@@ -121,7 +121,7 @@
         this.pageNumber = val
         this.listLightSignalLog()
       },
-      listLightSignalLog () {
+      listLightSignalLog () { // 获取信号日志
         let postData = {
           pageNumber: this.pageNumber,
           pageSize: this.pageSize,
