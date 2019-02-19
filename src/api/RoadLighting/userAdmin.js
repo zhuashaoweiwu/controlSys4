@@ -268,6 +268,7 @@ export function getStaticMenu (obj) {
     method: 'POST',
     data: obj
   })
+
 }
 
 // 保存用户菜单权限
