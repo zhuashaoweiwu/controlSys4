@@ -385,7 +385,6 @@
     created () {
       this.getListDepartment()
       this.getAllListDepartment()
-      this.getAllListInstitution()
     }
   }
 </script>

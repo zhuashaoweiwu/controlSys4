@@ -10,6 +10,12 @@
             :value="item.id">
           </el-option>
         </el-select>
+        <!-- <el-input placeholder="请输入内容" class="input-with-select">
+        </el-input> -->
+        <!-- <el-button slot="append" type="primary" @click="goSearch()" icon="el-icon-search"></el-button> -->
+        <!-- <div class="btn-block f-r">
+          <el-button type="primary">查询</el-button>
+        </div> -->
       </div>
       <div class="system-center">
         <div class="operation-bar">
@@ -72,13 +78,20 @@
             <el-table-column
               prop="email"
               label="电子邮箱"
-              width="150">
+              >
             </el-table-column>
             <el-table-column
               fixed="right"
               label="操作"
-              width="180">
+              width="260">
               <template slot-scope="scope">
+                <el-button type="text" @click.native.prevent="setMenu(scope.row.id)"  :props="Props" size="small">用户操作权限</el-button>
+                <!--<el-button-->
+                  <!--@click.native.prevent="setUser(scope.$index)"-->
+                  <!--type="text"-->
+                  <!--size="small">-->
+                  <!--用户操作权限-->
+                <!--</el-button>-->
                 <el-button
                   @click.native.prevent="editRow(scope.$index)"
                   type="text"
@@ -115,6 +128,19 @@
           </el-pagination>
         </div>
       </div>
+    <el-dialog
+      title="提示"
+      :visible.sync="menuDialog"
+      width="30%"
+      :before-close="handleClose">
+          <span>
+            <el-tree :data="data2" :props="Props" show-checkbox  node-key="id" ref="tree"></el-tree>
+          </span>
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="menuDialog = false">取 消</el-button>
+    <el-button type="primary" @click="getCheckedKeys" >确 定</el-button>
+  </span>
+    </el-dialog>
       <!-- 修改 增加用户 -->
       <el-dialog :title="addTypeText[addType]+'添加用户'"
        :visible.sync="userDialog" :close-on-click-modal='false' :close-on-press-escape='false' center
@@ -148,7 +174,7 @@
             <el-input class="width350" v-model="newUser.phone"></el-input>
           </el-form-item>
           <el-form-item label="电子邮箱" required>
-            <el-input class="width350" v-model="newUser.email"></el-input>
+            <el-input  v-model="newUser.email"></el-input>
           </el-form-item>
           <el-form-item label="职位" required>
             <el-input class="width350" v-model="newUser.place"></el-input>
@@ -182,6 +208,16 @@
           <el-button type="primary" @click="onSubmit">确 定</el-button>
         </div>
       </el-dialog>
+    <!--用户权限设置-->
+    <!--<el-tree-->
+      <!--:data="data2"-->
+      <!--show-checkbox-->
+      <!--node-key="id"-->
+      <!--:default-expanded-keys="[2, 3]"-->
+      <!--:default-checked-keys="[5]"-->
+      <!--:props="defaultProps">-->
+    <!--</el-tree>-->
+    <!--用户权限设置结束-->
       <!-- 修改 密码 -->
       <el-dialog title="修改密码"
        :visible.sync="passwordDialog" :close-on-click-modal='false' :close-on-press-escape='false' center
@@ -200,11 +236,12 @@
 </template>
 
 <script>
-import {addOrUpdateUser, listUser, getUser, deleteUser, updateUserPwd, listDepartment} from '@/api/RoadLighting/userAdmin'
+import {addOrUpdateUser, listUser, getUser, deleteUser, updateUserPwd, getStaticMenu, listDepartment, saveUserMapRighters, getMenuById} from '@/api/RoadLighting/userAdmin'
 import '../../../utils/filter.js'
+
 export default {
   name: 'organization',
-  data () {
+  data() {
     return {
       addTypeText: ['添加', '修改'],
       addType: 0,
@@ -233,24 +270,62 @@ export default {
       userDialog: false,
       passwordDialog: false,
       listAllDepartment: [],
-      newPwd: {}
+      newPwd: {},
+      menuDialog: false,
+      data2: [],
+      selectUserId:0,
+      //   label: '首页'
+      // }, {
+      //   label: '用户管理',
+      //   children: [{
+      //     label: '机构管理',
+      //     children: [{
+      //       label: '三级 2-1-1'
+      //     }]
+      //   }, {
+      //     label: '部门岗位',
+      //     children: [{
+      //       label: '三级 2-2-1'
+      //     }]
+      //   }, {
+      //     label: '用户列表',
+      //     children: [{
+      //       label: '三级 2-3-1'
+      //     }]
+      //   }]
+      // }],
+      Props: {
+        children: 'subMenuViewList',
+        label: 'name'
+      }
     }
   },
   watch: {
-    userType () {
+    userType() {
       this.goSearch()
     }
   },
   methods: {
-    handleSelectionChange (val) {
+    handleClose(done) {
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          done()
+        })
+        .catch(_ => {
+        })
+    },
+    handleNodeClick() {
+      console.log()
+    },
+    handleSelectionChange(val) {
       this.multipleSelection = val
     },
-    handleCurrentChange (val) {
+    handleCurrentChange(val) {
       this.pageNumber = val
       this.getListUser()
       // 翻页请求
     },
-    handleSizeChange (val) {
+    handleSizeChange(val) {
       this.pageSize = val
       this.getListUser()
     },
@@ -411,6 +486,48 @@ export default {
         })
         this.passwordDialog = false
         this.newPwd = {}
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    // 获取菜单树列表
+    setMenu ( id  ) {
+      this.selectUserId = id
+      this.menuDialog = true
+      let that = this
+      getStaticMenu().then(response => {
+        that.data2 = response.data
+        // this.$refs.tree.setCheckedKeys([3])
+      }).catch(error => {
+        console.log(error)
+      })
+      getMenuById({id:this.selectUserId}).then(response => {
+        let ids=[]
+        console.log(response)
+        let getId = arr => {
+          arr.forEach(v => {
+            !v.subMenuViewList.length&&ids.push(v.id)
+            if (v.subMenuViewList instanceof Array) {
+              getId(v.subMenuViewList)
+            }
+          })
+        }
+        getId(response.data)
+        console.log(ids)
+        // response.data.length&&response.data.forEach(d=>{
+        //   ids.push(d.id)
+        // })
+        this.$refs.tree.setCheckedKeys(ids)
+
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    // 保存菜单映射
+    getCheckedKeys () {
+      this.menuDialog = false
+      saveUserMapRighters({userId: this.selectUserId, righterIds: this.$refs.tree.getCheckedKeys().concat(this.$refs.tree.getHalfCheckedKeys())}).then(response => {
+        console.log(response)
       }).catch(error => {
         console.log(error)
       })

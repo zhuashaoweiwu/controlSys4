@@ -251,11 +251,38 @@ export function listOnlineUser () {
 /**
  * 返回日志
  * @export
+ * @export
  * @returns list
  */
 export function listUserOpLog (obj) {
   return request({
     url: '/api/user/listUserOpLog',
+    method: 'POST',
+    data: obj
+  })
+}
+// 菜单权限资源操作
+export function getStaticMenu (obj) {
+  return request({
+    url: '/api/login/getStaticMenu',
+    method: 'POST',
+    data: obj
+  })
+}
+
+// 保存用户菜单权限
+export function saveUserMapRighters (obj) {
+  return request({
+    url: '/api/menu/saveUserMapRighters',
+    method: 'POST',
+    data: obj
+  })
+}
+
+// 保存用户菜单权限
+export function getMenuById (obj) {
+  return request({
+    url: '/api/login/getMenuById',
     method: 'POST',
     data: obj
   })
